@@ -1,0 +1,16 @@
+{
+    "appId": "bf.backtoburkina.app",
+    "appName": "Back to Burkina",
+    "webDir": "public",
+    "server": {
+        "url": "https://backtoburkina.bf/accueil",
+        "cleartext": false,
+        "allowNavigation": ["backtoburkina.bf", "*.backtoburkina.bf"]
+    },
+    "ios": {
+        "contentInset": "always"
+    },
+    "android": {
+        "allowMixedContent": false
+    }
+}

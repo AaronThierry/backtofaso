@@ -1,0 +1,95 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/* Charte « Bleu iOS & Doré » — voir la maquette */
+@theme {
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+    --color-brand-50: #F0F7FF;
+    --color-brand-100: #DCEBFF;
+    --color-brand-200: #B8D7FF;
+    --color-brand-300: #86BBFF;
+    --color-brand-400: #4A9BFF;
+    --color-brand-500: #0A84FF;
+    --color-brand-600: #0071E3;
+    --color-brand-700: #005BBF;
+    --color-brand-800: #004A99;
+    --color-brand-900: #003A78;
+
+    --color-gold-50: #FFF5E8;
+    --color-gold-100: #FBE8CD;
+    --color-gold-300: #DCBB8A;
+    --color-gold-600: #8E6202;
+    --color-gold-700: #724F06;
+
+    --color-ink-50: #F4F7FB;
+    --color-ink-100: #E9EBEF;
+    --color-ink-200: #D5D9E1;
+    --color-ink-300: #BDC1C9;
+    --color-ink-400: #9DA2A9;
+    --color-ink-500: #82868E;
+    --color-ink-600: #686C73;
+    --color-ink-700: #53575E;
+    --color-ink-800: #40444A;
+    --color-ink-900: #2D3037;
+
+    --color-ok-50: #EEFBF1;
+    --color-ok-700: #0B6834;
+    --color-warn-50: #FFF5EE;
+    --color-warn-700: #854201;
+    --color-err-50: #FEF4F3;
+    --color-err-700: #97292A;
+}
+
+@layer base {
+    html { -webkit-tap-highlight-color: transparent; }
+    body { @apply bg-white text-ink-900 antialiased; }
+    [x-cloak] { display: none !important; }
+}
+
+@utility btn {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-[10px] px-5 text-[15px] font-bold transition;
+}
+@utility btn-primary {
+    @apply btn bg-brand-600 text-white hover:bg-brand-700;
+}
+@utility btn-secondary {
+    @apply btn border border-ink-500 bg-white text-ink-900 hover:bg-ink-50;
+}
+@utility btn-ghost {
+    @apply btn text-brand-600 hover:bg-brand-50;
+}
+@utility card {
+    @apply rounded-xl border border-brand-100 bg-brand-50;
+}
+@utility field-label {
+    @apply text-[13px] font-semibold text-ink-900;
+}
+@utility field {
+    @apply min-h-12 w-full rounded-[10px] border border-ink-500 bg-white px-3.5 text-[15px] text-ink-900 placeholder:text-ink-400 focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-100;
+}
+@utility chip {
+    @apply inline-flex min-h-10 cursor-pointer items-center rounded-full border border-ink-200 bg-white px-3.5 text-sm font-semibold text-ink-900;
+}
+@utility chip-on {
+    @apply border-brand-600 bg-brand-100 text-brand-700;
+}
+@utility badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold whitespace-nowrap;
+}
+@utility badge-ok {
+    @apply badge bg-ok-50 text-ok-700;
+}
+@utility badge-warn {
+    @apply badge bg-warn-50 text-warn-700;
+}
+@utility badge-err {
+    @apply badge bg-err-50 text-err-700;
+}
+@utility badge-gold {
+    @apply badge bg-gold-600 text-white;
+}

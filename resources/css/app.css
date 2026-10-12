@@ -73,6 +73,62 @@
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-8px); }
     }
+
+    --animate-marquee: marquee 38s linear infinite;
+    --animate-drift: drift 18s ease-in-out infinite alternate;
+    --animate-shine: shine 2.8s ease-in-out infinite;
+
+    @keyframes marquee {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+    }
+    @keyframes drift {
+        0% { transform: translate3d(0, 0, 0) scale(1); }
+        50% { transform: translate3d(40px, -30px, 0) scale(1.08); }
+        100% { transform: translate3d(-30px, 20px, 0) scale(0.96); }
+    }
+    @keyframes shine {
+        0%, 60% { transform: translateX(-120%) skewX(-20deg); }
+        100% { transform: translateX(220%) skewX(-20deg); }
+    }
+}
+
+/* Transitions fluides entre les pages (navigateurs compatibles) */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.28s; }
+
+/* ---------- Apparition au défilement (activée seulement si le JS tourne : classe .js sur <html>) ---------- */
+.js [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+}
+.js [data-reveal='left'] { transform: translate3d(-36px, 0, 0); }
+.js [data-reveal='right'] { transform: translate3d(36px, 0, 0); }
+.js [data-reveal='zoom'] { transform: scale(0.94); }
+.js [data-reveal='fade'] { transform: none; }
+.js [data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* Titre révélé ligne par ligne */
+.js [data-lines] > * {
+    display: block;
+    opacity: 0;
+    transform: translate3d(0, 0.5em, 0);
+    filter: blur(6px);
+    transition: opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.9s ease;
+}
+.js [data-lines].is-visible > * { opacity: 1; transform: none; filter: none; }
+.js [data-lines].is-visible > *:nth-child(2) { transition-delay: 0.14s; }
+.js [data-lines].is-visible > *:nth-child(3) { transition-delay: 0.28s; }
+
+/* Ligne qui se dessine (frise des étapes) */
+.js [data-draw] { transform: scaleX(0); transform-origin: left; transition: transform 1.4s cubic-bezier(0.65, 0, 0.35, 1) 0.2s; }
+.js [data-draw].is-visible { transform: scaleX(1); }
+
+@media (prefers-reduced-motion: reduce) {
+    .js [data-reveal], .js [data-lines] > *, .js [data-draw] { opacity: 1 !important; transform: none !important; filter: none !important; }
 }
 
 @layer base {
@@ -82,7 +138,7 @@
     ::selection { @apply bg-brand-200 text-navy-950; }
     [x-cloak] { display: none !important; }
     @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+        *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
     }
 }
 
@@ -185,6 +241,30 @@
 @utility bg-dots {
     background-image: radial-gradient(rgb(10 28 66 / 0.07) 1px, transparent 1px);
     background-size: 18px 18px;
+}
+/* Reflet qui balaie un bouton d'appel à l'action */
+@utility shine {
+    @apply relative overflow-hidden;
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        width: 40%;
+        background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.45), transparent);
+        animation: var(--animate-shine);
+        pointer-events: none;
+    }
+}
+/* Carrousel horizontal à glissement (mobile) */
+@utility snap-row {
+    @apply flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-2;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+    & > * { @apply shrink-0 snap-start; }
+}
+/* Masque en fondu sur les bords (bandeau défilant) */
+@utility fade-edges {
+    mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
 }
 @utility scrollbar-thin {
     scrollbar-width: thin;

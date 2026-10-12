@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- Active les animations d'apparition ; si le script ne se charge pas, le contenu redevient visible --}}
+    <script>document.documentElement.classList.add('js');setTimeout(function(){if(!document.documentElement.classList.contains('motion-ready'))document.documentElement.classList.remove('js')},2500);</script>
     <title>{{ isset($title) ? $title.' · ' : '' }}Back to Burkina</title>
     <meta name="description" content="Étudier en Chine, revenir bâtir le Faso. Accompagnement Travel Express du départ jusqu’au retour.">
 

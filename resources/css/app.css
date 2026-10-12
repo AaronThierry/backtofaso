@@ -5,9 +5,10 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
-/* Charte « Bleu iOS & Doré » — voir la maquette */
+/* Charte « Bleu iOS & Doré » — voir la maquette. Bleu nuit pour les zones fortes, doré en accent. */
 @theme {
     --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-display: 'Bricolage Grotesque', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
 
     --color-brand-50: #F0F7FF;
     --color-brand-100: #DCEBFF;
@@ -20,9 +21,17 @@
     --color-brand-800: #004A99;
     --color-brand-900: #003A78;
 
-    --color-gold-50: #FFF5E8;
+    --color-navy-700: #163571;
+    --color-navy-800: #0E2657;
+    --color-navy-900: #0A1C42;
+    --color-navy-950: #06122C;
+
+    --color-gold-50: #FFF8EC;
     --color-gold-100: #FBE8CD;
+    --color-gold-200: #F3D49E;
     --color-gold-300: #DCBB8A;
+    --color-gold-400: #E0AE4C;
+    --color-gold-500: #C8922B;
     --color-gold-600: #8E6202;
     --color-gold-700: #724F06;
 
@@ -37,59 +46,147 @@
     --color-ink-800: #40444A;
     --color-ink-900: #2D3037;
 
+    --color-canvas: #F3F5F9;
+
     --color-ok-50: #EEFBF1;
+    --color-ok-500: #22A55A;
     --color-ok-700: #0B6834;
     --color-warn-50: #FFF5EE;
+    --color-warn-500: #E08A1E;
     --color-warn-700: #854201;
     --color-err-50: #FEF4F3;
+    --color-err-500: #E0484A;
     --color-err-700: #97292A;
+
+    --shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 6px 20px -8px rgb(16 24 40 / 0.10);
+    --shadow-lift: 0 2px 4px rgb(16 24 40 / 0.04), 0 22px 44px -18px rgb(16 24 40 / 0.28);
+    --shadow-glow: inset 0 1px 0 rgb(255 255 255 / 0.18), 0 10px 24px -10px rgb(0 113 227 / 0.65);
+
+    --animate-rise: rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    --animate-float: float 7s ease-in-out infinite;
+
+    @keyframes rise {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: none; }
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
 }
 
 @layer base {
-    html { -webkit-tap-highlight-color: transparent; }
-    body { @apply bg-white text-ink-900 antialiased; }
+    html { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+    body { @apply bg-white text-ink-900 antialiased; font-feature-settings: 'ss01', 'cv11'; }
+    h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.022em; text-wrap: balance; }
+    ::selection { @apply bg-brand-200 text-navy-950; }
     [x-cloak] { display: none !important; }
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    }
 }
 
+/* ---------- Boutons ---------- */
 @utility btn {
-    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-[10px] px-5 text-[15px] font-bold transition;
+    @apply inline-flex min-h-12 select-none items-center justify-center gap-2 rounded-xl px-5 text-[15px] font-bold transition duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-200 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50;
 }
 @utility btn-primary {
-    @apply btn bg-brand-600 text-white hover:bg-brand-700;
+    @apply btn bg-linear-to-b from-brand-500 to-brand-600 text-white shadow-glow hover:-translate-y-px hover:from-brand-600 hover:to-brand-700;
 }
 @utility btn-secondary {
-    @apply btn border border-ink-500 bg-white text-ink-900 hover:bg-ink-50;
+    @apply btn bg-white text-ink-900 shadow-xs ring-1 ring-ink-200 hover:bg-ink-50 hover:ring-ink-300;
 }
 @utility btn-ghost {
     @apply btn text-brand-600 hover:bg-brand-50;
 }
-@utility card {
-    @apply rounded-xl border border-brand-100 bg-brand-50;
+@utility btn-light {
+    @apply btn bg-white text-navy-900 shadow-lg shadow-navy-950/20 hover:-translate-y-px hover:bg-brand-50;
 }
+@utility btn-outline-light {
+    @apply btn text-white ring-1 ring-white/35 hover:bg-white/10 hover:ring-white/60;
+}
+@utility btn-gold {
+    @apply btn bg-linear-to-b from-gold-400 to-gold-500 text-navy-950 shadow-[inset_0_1px_0_rgb(255_255_255/0.35),0_10px_24px_-10px_rgb(200_146_43/0.8)] hover:-translate-y-px;
+}
+@utility icon-btn {
+    @apply inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-white text-ink-700 shadow-xs ring-1 ring-ink-200 transition hover:bg-ink-50 hover:text-ink-900 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-200;
+}
+
+/* ---------- Surfaces ---------- */
+@utility card {
+    @apply rounded-2xl bg-white shadow-card ring-1 ring-ink-900/[0.06];
+}
+@utility card-hover {
+    @apply transition duration-200 hover:-translate-y-0.5 hover:shadow-lift hover:ring-brand-200;
+}
+@utility card-tint {
+    @apply rounded-2xl bg-brand-50 ring-1 ring-brand-100;
+}
+@utility glass {
+    @apply bg-white/10 ring-1 ring-white/15 backdrop-blur-md;
+}
+
+/* ---------- Formulaires ---------- */
 @utility field-label {
-    @apply text-[13px] font-semibold text-ink-900;
+    @apply text-[13px] font-semibold text-ink-800;
 }
 @utility field {
-    @apply min-h-12 w-full rounded-[10px] border border-ink-500 bg-white px-3.5 text-[15px] text-ink-900 placeholder:text-ink-400 focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-100;
+    @apply min-h-12 w-full rounded-xl border border-ink-200 bg-white px-3.5 text-[15px] text-ink-900 shadow-xs transition placeholder:text-ink-400 hover:border-ink-300 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-100;
+}
+@utility field-group {
+    @apply flex min-h-12 w-full items-center overflow-hidden rounded-xl border border-ink-200 bg-white shadow-xs transition hover:border-ink-300 focus-within:border-brand-500 focus-within:ring-4 focus-within:ring-brand-100;
 }
 @utility chip {
-    @apply inline-flex min-h-10 cursor-pointer items-center rounded-full border border-ink-200 bg-white px-3.5 text-sm font-semibold text-ink-900;
+    @apply inline-flex min-h-10 cursor-pointer select-none items-center gap-1.5 rounded-full bg-white px-4 text-sm font-semibold text-ink-700 shadow-xs ring-1 ring-ink-200 transition hover:text-ink-900 hover:ring-brand-300;
 }
 @utility chip-on {
-    @apply border-brand-600 bg-brand-100 text-brand-700;
+    @apply bg-navy-900! text-white! ring-navy-900!;
 }
+
+/* ---------- Badges (avec pastille) ---------- */
 @utility badge {
-    @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold whitespace-nowrap;
+    @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-ink-100 px-2.5 py-1 text-xs font-bold text-ink-700 ring-1 ring-inset ring-ink-900/5 before:size-1.5 before:rounded-full before:bg-current before:content-[''];
 }
 @utility badge-ok {
-    @apply badge bg-ok-50 text-ok-700;
+    @apply badge bg-ok-50 text-ok-700 ring-ok-700/15;
 }
 @utility badge-warn {
-    @apply badge bg-warn-50 text-warn-700;
+    @apply badge bg-warn-50 text-warn-700 ring-warn-700/15;
 }
 @utility badge-err {
-    @apply badge bg-err-50 text-err-700;
+    @apply badge bg-err-50 text-err-700 ring-err-700/15;
 }
 @utility badge-gold {
-    @apply badge bg-gold-600 text-white;
+    @apply badge bg-linear-to-b from-gold-400 to-gold-500 text-navy-950 ring-0 before:hidden;
+}
+
+/* ---------- Typographie ---------- */
+@utility eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-brand-600;
+}
+
+/* ---------- Fonds et motifs ---------- */
+/* Fond bleu nuit avec halos (bannières, panneaux) */
+@utility bg-hero {
+    background-color: var(--color-navy-950);
+    background-image:
+        radial-gradient(900px 420px at 85% -10%, rgb(10 132 255 / 0.55), transparent 62%),
+        radial-gradient(700px 380px at -10% 115%, rgb(200 146 43 / 0.28), transparent 60%),
+        linear-gradient(160deg, var(--color-navy-800) 0%, var(--color-navy-900) 55%, var(--color-navy-950) 100%);
+}
+/* Rayures inspirées du Faso Dan Fani, à poser en surimpression */
+@utility bg-weave {
+    background-image: repeating-linear-gradient(90deg,
+        rgb(255 255 255 / 0.05) 0 2px, transparent 2px 16px,
+        rgb(224 174 76 / 0.12) 16px 18px, transparent 18px 22px,
+        rgb(255 255 255 / 0.04) 22px 23px, transparent 23px 40px);
+}
+/* Trame de points discrète pour les fonds clairs */
+@utility bg-dots {
+    background-image: radial-gradient(rgb(10 28 66 / 0.07) 1px, transparent 1px);
+    background-size: 18px 18px;
+}
+@utility scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-ink-200) transparent;
 }

@@ -28,6 +28,19 @@ $paths = [
     'bookmark' => '<path d="M6 3h12v18l-6-4-6 4z"/>',
     'menu' => '<path d="M4 7h16M4 12h16M4 17h16"/>',
     'close' => '<path d="M6 6l12 12M18 6L6 18"/>',
+    'graduation' => '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5M22 9v6"/>',
+    'briefcase' => '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>',
+    'globe' => '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/>',
+    'plane' => '<path d="M10.5 13.5L3 11l1.5-1.5 8 1 4-4.5c1-1 2.5-1.3 3.3-.5s.5 2.3-.5 3.3l-4.5 4 1 8L14.3 22l-2.5-7.5-3.3 3V20l-1.5 1-1-3.5L2.5 16.5l1-1.5h2.5z"/>',
+    'spark' => '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/>',
+    'clock' => '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    'calendar' => '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+    'external' => '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+    'help' => '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/>',
+    'star' => '<path d="M12 3.5l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.1-5.4 3.1 1.3-6-4.6-4.1 6.1-.6z"/>',
+    'eye' => '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    'map' => '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+    'language' => '<path d="M4 5h9M8.5 3v2M11 5c-.8 4-3.5 7.2-7 9M6 9c1.2 2.2 3.2 4 5.5 5M13 21l4-10 4 10M14.5 17.5h5"/>',
 ];
 @endphp
 <svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" {{ $attributes->merge(['stroke-width' => '1.8']) }}>{!! $paths[$name] ?? '' !!}</svg>

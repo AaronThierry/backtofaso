@@ -1,16 +1,26 @@
 @php($last = $conversation->latestMessage)
 @php($unread = $conversation->unreadCountFor($user))
-<a href="{{ route('chat.show', $conversation) }}" @class(['flex min-h-16 items-center gap-3 border-b border-ink-100 py-2 lg:-mx-2 lg:rounded-lg lg:border-transparent lg:px-2', 'lg:bg-brand-50' => $active ?? false, 'lg:hover:bg-ink-50' => ! ($active ?? false)])>
-    <x-avatar :initials="$conversation->initials($user)" :size="46" :tone="$conversation->type === 'direct' ? 'green' : 'ink'" :square="$conversation->type !== 'direct'" />
+@php($name = $conversation->displayNameFor($user))
+<a href="{{ route('chat.show', $conversation) }}" x-show="!q || @js(mb_strtolower($name)).includes(q.toLowerCase())"
+   @class(['relative flex min-h-[68px] items-center gap-3 rounded-xl px-2.5 py-2 transition', 'bg-brand-50 ring-1 ring-brand-100' => $active ?? false, 'hover:bg-ink-50' => ! ($active ?? false)])>
+    @if ($active ?? false)
+        <span class="absolute -left-px top-1/2 h-7 w-1 -translate-y-1/2 rounded-r-full bg-brand-600"></span>
+    @endif
+    <span class="relative">
+        <x-avatar :initials="$conversation->initials($user)" :size="46" :tone="$conversation->type === 'direct' ? 'brand' : 'ink'" :square="$conversation->type !== 'direct'" />
+        @if ($unread)
+            <span class="absolute -right-0.5 -top-0.5 size-3 rounded-full bg-brand-600 ring-2 ring-white"></span>
+        @endif
+    </span>
     <span class="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span class="flex justify-between gap-2">
-            <span class="truncate text-[14.5px] font-bold">{{ $conversation->displayNameFor($user) }}</span>
-            <span class="shrink-0 text-xs text-ink-600">{{ $last?->created_at?->isToday() ? $last->created_at->format('H:i') : $last?->created_at?->translatedFormat('j M') }}</span>
+        <span class="flex items-baseline justify-between gap-2">
+            <span @class(['truncate text-[14.5px] text-navy-950', 'font-extrabold' => $unread, 'font-bold' => ! $unread])>{{ $name }}</span>
+            <span @class(['shrink-0 text-[11.5px]', 'font-bold text-brand-600' => $unread, 'text-ink-500' => ! $unread])>{{ $last?->created_at?->isToday() ? $last->created_at->format('H:i') : $last?->created_at?->translatedFormat('j M') }}</span>
         </span>
         <span class="flex items-center gap-2">
-            <span class="truncate text-[13px] text-ink-600">
+            <span @class(['truncate text-[13px]', 'font-semibold text-ink-800' => $unread, 'text-ink-500' => ! $unread])>
                 @if ($last)
-                    {{ $last->user_id === $user->id ? 'Vous' : $last->user->first_name }} : {{ $last->attachment_name ? 'Fichier partagé : '.$last->attachment_name : $last->body }}
+                    {{ $last->user_id === $user->id ? 'Vous' : $last->user->first_name }} : {{ $last->attachment_name ? '📎 '.$last->attachment_name : $last->body }}
                 @else
                     Aucun message
                 @endif

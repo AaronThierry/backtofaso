@@ -32,7 +32,15 @@ class User extends Authenticatable
         self::ROLE_RECRUITER => ['Recruteur / entreprise', 'Je cherche des profils formés en Chine'],
     ];
 
-    public const DEGREES = ['Bac', 'Licence', 'Master', 'Autre'];
+    /** Icône de chaque profil public (composant x-icon) */
+    public const ROLE_ICONS = [
+        self::ROLE_CANDIDATE => 'plane',
+        self::ROLE_STUDENT_ABROAD => 'graduation',
+        self::ROLE_GRADUATE => 'briefcase',
+        self::ROLE_RECRUITER => 'users',
+    ];
+
+    public const DEGREES =['Bac', 'Licence', 'Master', 'Autre'];
 
     public const FIELDS = ['Informatique', 'Génie civil', 'Santé', 'Commerce', 'Langue chinoise', 'Agronomie', 'Autre'];
 
@@ -136,5 +144,16 @@ class User extends Authenticatable
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
+    }
+
+    /** Messages non lus, toutes conversations confondues (pastille du menu Chat) */
+    public function unreadMessagesCount(): int
+    {
+        return Message::query()
+            ->join('conversation_user as cu', 'cu.conversation_id', '=', 'messages.conversation_id')
+            ->where('cu.user_id', $this->id)
+            ->where('messages.user_id', '!=', $this->id)
+            ->where(fn ($q) => $q->whereNull('cu.last_read_at')->orWhereColumn('messages.created_at', '>', 'cu.last_read_at'))
+            ->count();
     }
 }

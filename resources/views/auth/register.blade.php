@@ -1,21 +1,29 @@
+@php($currentRole = old('role', $role))
 <x-layouts.auth title="Créer un compte">
-    <form method="POST" action="{{ route('register.store') }}" class="flex flex-1 flex-col gap-4" x-data="{ show: false, terms: {{ old('terms') ? 'true' : 'false' }} }">
+    <form method="POST" action="{{ route('register.store') }}" class="flex flex-1 flex-col gap-5"
+          x-data="{ show: false, terms: {{ old('terms') ? 'true' : 'false' }}, password: '', loading: false,
+                    get strength() { let s = 0; if (this.password.length >= 8) s++; if (/\d/.test(this.password)) s++; if (/[A-Z]/.test(this.password) || /[^\w]/.test(this.password)) s++; if (this.password.length >= 12) s++; return s; } }"
+          @submit="loading = true">
         @csrf
-        <input type="hidden" name="role" value="{{ old('role', $role) }}">
+        <input type="hidden" name="role" value="{{ $currentRole }}">
 
-        <div class="flex items-center gap-3">
-            <a href="{{ route('welcome') }}" aria-label="Retour" class="flex size-11 shrink-0 items-center justify-center rounded-full border border-ink-200"><x-icon name="back" /></a>
+        <div class="flex items-center gap-4">
+            <a href="{{ route('welcome') }}" aria-label="Retour" class="icon-btn"><x-icon name="back" /></a>
             <x-progress-steps :current="1" :total="\App\Services\OtpService::enabled() ? 4 : 3" class="flex-1" />
         </div>
 
-        <div class="flex flex-col gap-1.5">
-            <h1 class="text-[26px] font-bold leading-tight">Créez votre compte</h1>
-            <p class="text-[14.5px] leading-relaxed text-ink-600">Il vous servira à suivre votre dossier et à échanger avec la communauté.</p>
+        <div class="flex flex-col gap-2">
+            <h1 class="text-[30px] font-extrabold leading-[1.05] text-navy-950 lg:text-[36px]">Créez votre compte</h1>
+            <p class="text-[15px] leading-relaxed text-ink-600">Il vous servira à suivre votre dossier et à échanger avec la communauté.</p>
         </div>
 
-        <div class="flex items-center justify-between rounded-[10px] border border-brand-100 bg-brand-50 px-3.5 py-2.5 text-sm">
-            <span><span class="text-ink-600">Profil :</span> <b>{{ $roles[old('role', $role)][0] }}</b></span>
-            <a href="{{ route('welcome') }}" class="text-[13.5px] font-bold text-brand-600">Modifier</a>
+        <div class="flex items-center gap-3 rounded-2xl bg-linear-to-r from-brand-50 to-white px-3.5 py-3 ring-1 ring-brand-100">
+            <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-600 text-white shadow-glow"><x-icon :name="\App\Models\User::ROLE_ICONS[$currentRole] ?? 'user'" :size="19" /></span>
+            <span class="flex min-w-0 flex-1 flex-col">
+                <span class="text-xs font-semibold text-ink-500">Votre profil</span>
+                <span class="truncate text-[15px] font-bold text-navy-950">{{ $roles[$currentRole][0] }}</span>
+            </span>
+            <a href="{{ route('welcome') }}" class="rounded-lg px-2.5 py-1.5 text-[13px] font-bold text-brand-600 hover:bg-brand-100">Modifier</a>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -33,16 +41,19 @@
 
         <label class="flex flex-col gap-1.5">
             <span class="field-label">Téléphone</span>
-            <span class="flex min-h-12 overflow-hidden rounded-[10px] border border-ink-500 focus-within:border-brand-600 focus-within:ring-2 focus-within:ring-brand-100">
-                <span class="flex items-center border-r border-ink-200 bg-ink-50 px-3 text-[15px] font-semibold">+226</span>
-                <input name="phone" value="{{ old('phone') }}" inputmode="tel" autocomplete="tel-national" placeholder="70 00 00 00" required class="min-w-0 flex-1 px-3.5 text-[15px] outline-none">
+            <span class="field-group">
+                <span class="flex h-full items-center gap-1.5 self-stretch border-r border-ink-200 bg-ink-50 px-3.5 text-[15px] font-semibold text-ink-800">+226</span>
+                <input name="phone" value="{{ old('phone') }}" inputmode="tel" autocomplete="tel-national" placeholder="70 00 00 00" required class="min-w-0 flex-1 bg-transparent px-3.5 text-[15px] outline-none placeholder:text-ink-400">
             </span>
             <x-field-error name="phone" /><x-field-error name="phone_full" />
         </label>
 
         <label class="flex flex-col gap-1.5">
-            <span class="field-label">E-mail @unless (\App\Services\OtpService::usesMail())<span class="font-medium text-ink-600">(facultatif)</span>@endunless</span>
-            <input name="email" type="email" value="{{ old('email', $old['email'] ?? '') }}" autocomplete="email" placeholder="vous@exemple.com" @required(\App\Services\OtpService::usesMail()) class="field">
+            <span class="field-label">E-mail @unless (\App\Services\OtpService::usesMail())<span class="font-medium text-ink-500">(facultatif)</span>@endunless</span>
+            <span class="field-group">
+                <x-icon name="mail" :size="19" class="ml-3.5 text-ink-400" />
+                <input name="email" type="email" value="{{ old('email', $old['email'] ?? '') }}" autocomplete="email" placeholder="vous@exemple.com" @required(\App\Services\OtpService::usesMail()) class="min-w-0 flex-1 bg-transparent px-3 text-[15px] outline-none placeholder:text-ink-400">
+            </span>
             @if (\App\Services\OtpService::usesMail())
                 <span class="text-[12.5px] text-ink-600">Votre code de vérification sera envoyé à cette adresse.</span>
             @endif
@@ -51,23 +62,33 @@
 
         <label class="flex flex-col gap-1.5">
             <span class="field-label">Mot de passe</span>
-            <span class="flex min-h-12 items-center rounded-[10px] border border-ink-500 pl-3.5 pr-1 focus-within:border-brand-600 focus-within:ring-2 focus-within:ring-brand-100">
-                <input name="password" :type="show ? 'text' : 'password'" type="password" autocomplete="new-password" required class="min-w-0 flex-1 text-[15px] outline-none">
-                <button type="button" @click="show = !show" class="min-h-10 px-2.5 text-[13.5px] font-bold text-brand-600" x-text="show ? 'Masquer' : 'Afficher'">Afficher</button>
+            <span class="field-group pr-1">
+                <x-icon name="lock" :size="19" class="ml-3.5 text-ink-400" />
+                <input name="password" x-model="password" :type="show ? 'text' : 'password'" type="password" autocomplete="new-password" required class="min-w-0 flex-1 bg-transparent px-3 text-[15px] outline-none">
+                <button type="button" @click="show = !show" :aria-label="show ? 'Masquer le mot de passe' : 'Afficher le mot de passe'" class="flex size-10 items-center justify-center rounded-lg text-ink-500 hover:bg-ink-50 hover:text-ink-900"><x-icon name="eye" :size="19" /></button>
             </span>
-            <span class="text-[12.5px] text-ink-600">8 caractères minimum, dont un chiffre.</span>
+            <span class="grid grid-cols-4 gap-1.5 pt-1" aria-hidden="true">
+                <template x-for="i in 4" :key="i">
+                    <span class="h-1 rounded-full transition-colors duration-300"
+                          :class="i <= strength ? (strength <= 1 ? 'bg-err-500' : strength === 2 ? 'bg-warn-500' : 'bg-ok-500') : 'bg-ink-100'"></span>
+                </template>
+            </span>
+            <span class="text-[12.5px] text-ink-600" x-text="password.length === 0 ? '8 caractères minimum, dont un chiffre.' : (strength <= 1 ? 'Trop faible : 8 caractères minimum, dont un chiffre.' : strength === 2 ? 'Correct. Ajoutez une majuscule ou un symbole pour le renforcer.' : 'Mot de passe solide.')">8 caractères minimum, dont un chiffre.</span>
             <x-field-error name="password" />
         </label>
 
-        <label class="flex cursor-pointer items-start gap-3">
-            <input type="checkbox" name="terms" value="1" x-model="terms" class="mt-0.5 size-5 shrink-0 accent-brand-600">
-            <span class="text-[13.5px] leading-snug">J’accepte les <a href="#" class="font-semibold text-brand-600">conditions d’utilisation</a> et la <a href="#" class="font-semibold text-brand-600">politique de confidentialité</a>.</span>
+        <label class="flex cursor-pointer items-start gap-3 rounded-xl p-1">
+            <input type="checkbox" name="terms" value="1" x-model="terms" class="mt-0.5 size-5 shrink-0 rounded accent-brand-600">
+            <span class="text-[13.5px] leading-snug text-ink-700">J’accepte les <a href="#" class="font-semibold text-brand-600 underline-offset-2 hover:underline">conditions d’utilisation</a> et la <a href="#" class="font-semibold text-brand-600 underline-offset-2 hover:underline">politique de confidentialité</a>.</span>
         </label>
         <x-field-error name="terms" />
 
-        <div class="mt-auto flex flex-col items-center gap-2.5 pt-4">
-            <button type="submit" class="btn-primary min-h-[52px] w-full text-base" :disabled="!terms" :class="!terms && 'opacity-50'">@if (! \App\Services\OtpService::enabled()) Créer mon compte @elseif (\App\Services\OtpService::usesMail()) Recevoir le code par e-mail @else Recevoir le code par SMS @endif</button>
-            <span class="text-[13.5px] text-ink-600">Déjà inscrit ? <a href="{{ route('login') }}" class="font-bold text-brand-600">Se connecter</a></span>
+        <div class="mt-auto flex flex-col items-center gap-3 pt-2">
+            <button type="submit" class="btn-primary min-h-[54px] w-full text-base" :disabled="!terms || loading">
+                <span x-show="!loading" class="flex items-center gap-2">@if (! \App\Services\OtpService::enabled()) Créer mon compte @elseif (\App\Services\OtpService::usesMail()) Recevoir le code par e-mail @else Recevoir le code par SMS @endif <x-icon name="arrow" :size="18" /></span>
+                <span x-show="loading" x-cloak class="flex items-center gap-2"><span class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span> Un instant…</span>
+            </button>
+            <span class="text-[13.5px] text-ink-600">Déjà inscrit ? <a href="{{ route('login') }}" class="font-bold text-brand-600 hover:underline">Se connecter</a></span>
         </div>
     </form>
 </x-layouts.auth>

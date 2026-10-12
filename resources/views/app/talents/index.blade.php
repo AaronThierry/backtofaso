@@ -1,43 +1,50 @@
 <x-layouts.app title="Vivier de talents" active="talents">
-    <div class="flex flex-col gap-4 lg:gap-6">
-        <div class="flex flex-wrap items-end justify-between gap-4">
-            <div class="flex flex-col gap-1">
-                <h1 class="text-[26px] font-bold lg:text-[28px]">Vivier de talents</h1>
-                <span class="text-[13.5px] text-ink-600 lg:text-[15px]">Diplômés formés en Chine, de retour au Burkina</span>
-            </div>
+    <div class="flex flex-col gap-6 lg:gap-8">
+        <x-page-header title="Vivier de talents" eyebrow="Formés en Chine" subtitle="Des diplômés vérifiés par Travel Express, de retour au Burkina et prêts à travailler.">
             @if (auth()->user()->talentProfile)
-                <a href="{{ route('talents.show', auth()->user()->talentProfile) }}" class="btn-secondary min-h-11 text-sm"><x-icon name="user" :size="18" /> Mon profil talent</a>
+                <x-slot:actions>
+                    <a href="{{ route('talents.show', auth()->user()->talentProfile) }}" class="btn-secondary min-h-11 px-4 text-sm"><x-icon name="user" :size="18" /> Mon profil talent</a>
+                </x-slot:actions>
             @endif
-        </div>
+        </x-page-header>
 
-        <div class="flex flex-col gap-3 lg:rounded-xl lg:border lg:border-ink-200 lg:bg-white lg:p-4">
+        {{-- Recherche et filtres --}}
+        <div class="card flex flex-col gap-4 p-4 sm:p-5">
             <form method="GET" action="{{ route('talents.index') }}" class="flex gap-2.5">
                 @if ($field)<input type="hidden" name="domaine" value="{{ $field }}">@endif
-                <label class="flex min-h-[50px] flex-1 items-center gap-2.5 rounded-[10px] border border-ink-200 bg-white px-4 focus-within:border-brand-600 focus-within:ring-2 focus-within:ring-brand-100">
-                    <x-icon name="search" class="text-ink-600" />
+                <label class="field-group min-h-[52px] flex-1 bg-ink-50/60">
+                    <x-icon name="search" class="ml-4 text-ink-400" />
                     <span class="sr-only">Rechercher un profil</span>
-                    <input name="q" value="{{ $q }}" placeholder="Métier, compétence, ville…" class="min-w-0 flex-1 bg-transparent text-[15px] outline-none">
+                    <input name="q" value="{{ $q }}" placeholder="Métier, compétence, ville, nom…" class="min-w-0 flex-1 bg-transparent px-3 text-[15px] outline-none placeholder:text-ink-400">
+                    @if ($q !== '')
+                        <a href="{{ route('talents.index', array_filter(['domaine' => $field])) }}" aria-label="Effacer la recherche" class="mr-2 flex size-8 items-center justify-center rounded-full text-ink-500 hover:bg-ink-100"><x-icon name="close" :size="16" /></a>
+                    @endif
                 </label>
-                <button class="btn-primary hidden min-h-[50px] sm:inline-flex">Rechercher</button>
+                <button class="btn-primary hidden min-h-[52px] sm:inline-flex">Rechercher</button>
             </form>
 
-            <div class="flex flex-wrap gap-2">
-                <a href="{{ route('talents.index', array_filter(['q' => $q])) }}" @class(['chip', 'chip-on' => ! $field])>Tous</a>
+            <div class="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 scrollbar-thin sm:flex-wrap sm:overflow-visible sm:pb-0">
+                <a href="{{ route('talents.index', array_filter(['q' => $q])) }}" @class(['chip shrink-0', 'chip-on' => ! $field])>Tous les domaines</a>
                 @foreach ($fields as $f)
-                    <a href="{{ route('talents.index', array_filter(['q' => $q, 'domaine' => $f])) }}" @class(['chip hover:border-brand-300', 'chip-on' => $field === $f])>{{ $f }}</a>
+                    <a href="{{ route('talents.index', array_filter(['q' => $q, 'domaine' => $f])) }}" @class(['chip shrink-0', 'chip-on' => $field === $f])>{{ $f }}</a>
                 @endforeach
             </div>
         </div>
 
         @if ($profiles->total())
-            <span class="text-[13px] font-semibold text-ink-600">{{ $profiles->total() }} profil{{ $profiles->total() > 1 ? 's' : '' }}{{ $field ? ' en '.$field : '' }}{{ $q !== '' ? ' pour « '.$q.' »' : '' }}</span>
+            <div class="flex items-center justify-between">
+                <span class="text-[14px] text-ink-600"><b class="text-navy-950">{{ $profiles->total() }}</b> profil{{ $profiles->total() > 1 ? 's' : '' }}{{ $field ? ' en '.$field : '' }}{{ $q !== '' ? ' pour « '.$q.' »' : '' }}</span>
+                <span class="hidden items-center gap-1.5 text-[13px] text-ink-500 sm:flex"><x-icon name="shield" :size="15" /> Profils vérifiés uniquement</span>
+            </div>
         @endif
 
-        <div class="grid gap-3 md:grid-cols-2 lg:gap-4 xl:grid-cols-3">
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             @forelse ($profiles as $profile)
                 @include('app.talents._card')
             @empty
-                <p class="rounded-xl bg-white p-6 text-center text-sm text-ink-600 md:col-span-2 xl:col-span-3">Aucun profil ne correspond à votre recherche.</p>
+                <x-empty icon="users" title="Aucun profil trouvé" text="Essayez un autre mot-clé ou retirez le filtre de domaine." class="md:col-span-2 xl:col-span-3">
+                    <a href="{{ route('talents.index') }}" class="btn-secondary min-h-11 text-sm">Réinitialiser la recherche</a>
+                </x-empty>
             @endforelse
         </div>
 

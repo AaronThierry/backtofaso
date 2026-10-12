@@ -23,16 +23,17 @@ Route::middleware('guest')->group(function () {
     // Étape 1 : compte
     Route::get('/inscription', [RegisterController::class, 'create'])->name('register');
     Route::post('/inscription', [RegisterController::class, 'store'])->middleware('throttle:6,1')->name('register.store');
-    // Étape 2 : code SMS
+    // Étape 2 : code reçu par e-mail
     Route::get('/inscription/verification', [RegisterController::class, 'verifyForm'])->name('register.verify');
     Route::post('/inscription/verification', [RegisterController::class, 'verify'])->middleware('throttle:10,1')->name('register.verify.store');
     Route::post('/inscription/renvoyer', [RegisterController::class, 'resend'])->middleware('throttle:3,1')->name('register.resend');
 
+    // Connexion : e-mail + mot de passe, puis code reçu par e-mail
     Route::get('/connexion', [LoginController::class, 'create'])->name('login');
-    Route::post('/connexion', [LoginController::class, 'store'])->middleware('throttle:10,1')->name('login.store');
-    Route::post('/connexion/code', [LoginController::class, 'sendCode'])->middleware('throttle:3,1')->name('login.code');
-    Route::get('/connexion/verification', [LoginController::class, 'codeForm'])->name('login.code.form');
-    Route::post('/connexion/verification', [LoginController::class, 'verifyCode'])->middleware('throttle:10,1')->name('login.code.verify');
+    Route::post('/connexion', [LoginController::class, 'store'])->middleware('throttle:6,1')->name('login.store');
+    Route::get('/connexion/verification', [LoginController::class, 'verifyForm'])->name('login.verify');
+    Route::post('/connexion/verification', [LoginController::class, 'verify'])->middleware('throttle:10,1')->name('login.verify.store');
+    Route::post('/connexion/renvoyer', [LoginController::class, 'resend'])->middleware('throttle:3,1')->name('login.resend');
 });
 
 Route::middleware('auth')->group(function () {

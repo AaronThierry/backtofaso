@@ -4,7 +4,7 @@
         @csrf
         <div class="flex items-center gap-4">
             <a href="{{ route('onboarding.profile') }}" aria-label="Retour" class="icon-btn"><x-icon name="back" /></a>
-            <x-progress-steps :current="\App\Services\OtpService::enabled() ? 4 : 3" :total="\App\Services\OtpService::enabled() ? 4 : 3" class="flex-1" />
+            <x-progress-steps :current="4" :total="4" class="flex-1" />
         </div>
 
         <div class="flex flex-col gap-2">

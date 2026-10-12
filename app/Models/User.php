@@ -55,7 +55,7 @@ class User extends Authenticatable
         'first_name', 'last_name', 'phone', 'email', 'password', 'role',
         'birth_date', 'city', 'last_degree', 'interests', 'chinese_level', 'avatar_path',
         'notify_push', 'notify_sms', 'notify_whatsapp', 'notify_email',
-        'phone_verified_at', 'onboarded_at',
+        'phone_verified_at', 'email_verified_at', 'onboarded_at',
     ];
 
     protected $hidden = ['password', 'remember_token'];

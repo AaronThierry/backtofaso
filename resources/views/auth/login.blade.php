@@ -13,15 +13,15 @@
 
         <x-flash />
 
-        <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-5" id="login-form" x-data="{ show: false, loading: false }" @submit="loading = true">
+        <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-5" x-data="{ show: false, loading: false }" @submit="loading = true">
             @csrf
             <label class="flex flex-col gap-1.5">
-                <span class="field-label">Téléphone ou e-mail</span>
+                <span class="field-label">Adresse e-mail</span>
                 <span class="field-group">
-                    <x-icon name="user" :size="19" class="ml-3.5 text-ink-400" />
-                    <input name="login" value="{{ old('login') }}" autocomplete="username" placeholder="70 00 00 00 ou vous@exemple.com" required autofocus class="min-w-0 flex-1 bg-transparent px-3 text-[15px] outline-none placeholder:text-ink-400">
+                    <x-icon name="mail" :size="19" class="ml-3.5 text-ink-400" />
+                    <input name="email" type="email" value="{{ old('email') }}" autocomplete="email" inputmode="email" placeholder="vous@exemple.com" required autofocus class="min-w-0 flex-1 bg-transparent px-3 text-[15px] outline-none placeholder:text-ink-400">
                 </span>
-                <x-field-error name="login" />
+                <x-field-error name="email" />
             </label>
             <label class="flex flex-col gap-1.5">
                 <span class="field-label">Mot de passe</span>
@@ -34,20 +34,14 @@
                 </span>
             </label>
             <button type="submit" class="btn-primary mt-1 min-h-[54px] text-base" :disabled="loading">
-                <span x-show="!loading">Se connecter</span>
-                <span x-show="loading" x-cloak class="flex items-center gap-2"><span class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span> Connexion…</span>
+                <span x-show="!loading" class="flex items-center gap-2">Continuer <x-icon name="arrow" :size="18" /></span>
+                <span x-show="loading" x-cloak class="flex items-center gap-2"><span class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span> Envoi du code…</span>
             </button>
+            <p class="flex items-start gap-2.5 rounded-xl bg-brand-50 px-3.5 py-3 text-[13px] leading-relaxed text-brand-800 ring-1 ring-brand-100">
+                <x-icon name="shield" :size="17" class="mt-px shrink-0" />
+                Pour protéger votre compte, un code de connexion vous sera envoyé par e-mail à chaque connexion.
+            </p>
         </form>
-
-        @if (\App\Services\OtpService::enabled())
-            <div class="flex items-center gap-3 text-[13px] text-ink-500"><span class="h-px flex-1 bg-ink-200"></span>ou<span class="h-px flex-1 bg-ink-200"></span></div>
-
-            <form method="POST" action="{{ route('login.code') }}" x-data @submit="$refs.login.value = document.querySelector('#login-form [name=login]').value">
-                @csrf
-                <input type="hidden" name="login" x-ref="login">
-                <button type="submit" class="btn-secondary min-h-[52px] w-full"><x-icon :name="\App\Services\OtpService::usesMail() ? 'mail' : 'phone'" /> {{ \App\Services\OtpService::usesMail() ? 'Recevoir un code par e-mail' : 'Recevoir un code par SMS' }}</button>
-            </form>
-        @endif
 
         <div class="mt-auto flex items-center justify-between gap-3 rounded-2xl bg-ink-50 px-4 py-3.5 ring-1 ring-ink-100 lg:mt-4">
             <span class="text-sm text-ink-600">Pas encore de compte ?</span>

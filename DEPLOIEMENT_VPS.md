@@ -94,25 +94,33 @@ DB_PASSWORD=MOT_DE_PASSE_FORT
 QUEUE_CONNECTION=sync
 SESSION_SECURE_COOKIE=true
 
-SMS_DRIVER=log            # à remplacer par le vrai fournisseur avant d'ouvrir les inscriptions
+# Indispensable : un code est envoyé par e-mail à l'inscription et à chaque connexion
+MAIL_MAILER=smtp
+MAIL_SCHEME=smtps
+MAIL_HOST=smtp.hostinger.com
+MAIL_PORT=465
+MAIL_USERNAME=noreply@backtoburkina.bf
+MAIL_PASSWORD=MOT_DE_PASSE_DE_LA_BOITE
+MAIL_FROM_ADDRESS="noreply@backtoburkina.bf"
+
 OTP_SHOW_IN_DEV=false
 ```
 
 ```bash
 sudo chown www-data:www-data .env
-sudo -u www-data php artisan key:generate
+sudo -u www-data php artisan key:generate --force
 sudo -u www-data php artisan migrate --force
 sudo -u www-data php artisan storage:link
 ```
 
-**Ne pas lancer `db:seed` en production** (ce sont des données de démonstration). Créer seulement le compte administrateur :
+**Ne pas lancer `db:seed` en production** (ce sont des données de démonstration). Créer seulement le compte administrateur, avec une **adresse e-mail réelle que vous consultez** : chaque connexion demande un code envoyé à cette adresse.
 
 ```bash
 sudo -u www-data php artisan tinker
 ```
 
 ```php
-App\Models\User::create(['first_name'=>'Admin','last_name'=>'Travel Express','phone'=>'+226XXXXXXXX','email'=>'admin@backtoburkina.bf','password'=>'MOT_DE_PASSE','role'=>'admin','phone_verified_at'=>now(),'onboarded_at'=>now()]);
+App\Models\User::create(['first_name'=>'Admin','last_name'=>'Travel Express','phone'=>'+226XXXXXXXX','email'=>'VOTRE_ADRESSE@exemple.com','password'=>'MOT_DE_PASSE','role'=>'admin','email_verified_at'=>now(),'onboarded_at'=>now()]);
 App\Models\Conversation::superGroup()->users()->syncWithoutDetaching([App\Models\User::first()->id => ['role'=>'admin']]);
 exit
 ```
@@ -243,7 +251,8 @@ Sauvegarder aussi `storage/app` (documents des dossiers, avatars, fichiers du ch
 ## 9. Vérifications après mise en ligne
 
 - `https://backtoburkina.bf` s'affiche, cadenas HTTPS valide
-- Créer un compte de test → le code SMS arrive (ou apparaît dans `storage/logs/laravel.log` tant que `SMS_DRIVER=log`)
+- Créer un compte de test → le code arrive par e-mail (regarder aussi les spams), puis se reconnecter → un nouveau code arrive
+- Test d'envoi direct : `sudo -u www-data php artisan tinker --execute="Mail::raw('Test', fn (\$m) => \$m->to('vous@exemple.com')->subject('Test'));"`
 - Envoyer un document dans le dossier, un message et un fichier dans le chat
 - Sur Android (Chrome) : menu ⋮ › « Installer l'application »
 - Logs : `tail -f storage/logs/laravel.log` et `sudo tail -f /var/log/nginx/error.log`

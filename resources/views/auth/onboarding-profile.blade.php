@@ -2,7 +2,7 @@
     <form method="POST" action="{{ route('onboarding.profile.store') }}" class="flex flex-1 flex-col gap-6"
           x-data="{ degree: @js(old('last_degree', $user->last_degree)), interests: @js(old('interests', $user->interests ?? [])) }">
         @csrf
-        <x-progress-steps :current="\App\Services\OtpService::enabled() ? 3 : 2" :total="\App\Services\OtpService::enabled() ? 4 : 3" />
+        <x-progress-steps :current="3" :total="4" />
 
         <div class="flex flex-col gap-2">
             <span class="eyebrow">Bienvenue, {{ $user->first_name }}</span>

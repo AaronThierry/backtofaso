@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PhoneVerification extends Model
+class EmailVerification extends Model
 {
-    protected $fillable = ['phone', 'code_hash', 'attempts', 'expires_at', 'verified_at'];
+    protected $fillable = ['email', 'purpose', 'code_hash', 'attempts', 'expires_at', 'verified_at'];
 
     protected function casts(): array
     {

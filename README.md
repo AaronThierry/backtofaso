@@ -34,21 +34,23 @@ Ouvrez http://localhost:8000
 
 ### Comptes de démonstration (mot de passe : `password`)
 
-| Rôle | Téléphone |
+| Rôle | E-mail |
 |---|---|
-| Administrateur | 70 00 00 00 |
-| Conseiller Travel Express | 70 00 00 01 |
-| Candidate (dossier en cours) | 70 00 00 02 |
-| Étudiant en Chine | 70 00 00 03 |
-| Diplômés (vivier de talents) | 70 00 00 10 à 70 00 00 13 |
-| Recruteur | 70 00 00 20 |
+| Administrateur | admin@backtoburkina.bf |
+| Conseiller Travel Express | conseil@backtoburkina.bf |
+| Candidate (dossier en cours) | awa@exemple.bf |
+| Étudiant en Chine | issouf@exemple.bf |
+| Diplômés (vivier de talents) | talent1@exemple.bf à talent4@exemple.bf |
+| Recruteur | recruteur@exemple.bf |
 
-### Codes SMS en développement
+### Codes de vérification par e-mail
 
-Avec `SMS_DRIVER=log`, aucun SMS n’est envoyé : le code est écrit dans `storage/logs/laravel.log`.
-Avec `OTP_SHOW_IN_DEV=true` et `APP_ENV=local`, il s’affiche aussi à l’écran.
+Un code est envoyé par e-mail à l’inscription (pour vérifier l’adresse) et à chaque connexion, après le mot de passe.
 
-Pour la production, ajoutez votre fournisseur (API Orange SMS, Twilio…) dans `app/Services/SmsSender.php`.
+En local, avec `MAIL_MAILER=log`, aucun e-mail n’est envoyé : il est écrit dans `storage/logs/laravel.log`.
+Avec `OTP_SHOW_IN_DEV=true` et `APP_ENV=local`, le code s’affiche aussi à l’écran.
+
+En production, configurez un vrai serveur SMTP (`MAIL_*`), sinon personne ne pourra s’inscrire ni se connecter.
 
 ---
 
@@ -58,8 +60,8 @@ Pour la production, ajoutez votre fournisseur (API Orange SMS, Twilio…) dans `
 |---|---|---|
 | Site public | `/` | `PageController`, `views/site/home` |
 | Choix du profil | `/bienvenue` | `views/auth/welcome` |
-| Inscription en 4 étapes (compte, code SMS, profil, notifications) | `/inscription…` | `Auth/RegisterController`, `Auth/OnboardingController`, `Services/OtpService` |
-| Connexion (mot de passe ou code SMS) | `/connexion` | `Auth/LoginController` |
+| Inscription en 4 étapes (compte, code par e-mail, profil, notifications) | `/inscription…` | `Auth/RegisterController`, `Auth/OnboardingController`, `Services/OtpService` |
+| Connexion (e-mail + mot de passe, puis code par e-mail) | `/connexion` | `Auth/LoginController` |
 | Accueil | `/accueil` | `DashboardController` |
 | Suivi de dossier + envoi de documents | `/dossier` | `DossierController`, modèles `Dossier`, `DossierDocument` |
 | Vivier de talents (recherche, filtres, profil) | `/talents` | `TalentController`, modèle `TalentProfile` |
@@ -117,7 +119,7 @@ php artisan test
 
 ## 6. À compléter avant la mise en production
 
-- Fournisseur SMS réel dans `SmsSender`
+- Serveur SMTP de production (indispensable : inscription et connexion passent par un code envoyé par e-mail)
 - Back-office conseiller (valider les documents, faire avancer les étapes, vérifier les profils talents)
 - Notifications push (Firebase Cloud Messaging via `@capacitor/push-notifications`)
 - Textes marqués `[…]` (frais, téléphone, universités partenaires, photo du fondateur)

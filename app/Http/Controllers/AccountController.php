@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\OtpService;
+use App\Support\Phone;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -12,6 +12,6 @@ class AccountController extends Controller
     {
         $user = $request->user();
 
-        return view('app.account', ['user' => $user, 'phone' => OtpService::format($user->phone)]);
+        return view('app.account', ['user' => $user, 'phone' => Phone::format($user->phone)]);
     }
 }

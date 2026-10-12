@@ -7,15 +7,15 @@
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#FFFFFF;border:1px solid #E9EBEF;border-radius:12px">
         <tr><td style="padding:28px 28px 8px">
             <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-                <td style="width:40px;height:40px;background:#8E6202;border-radius:10px;color:#FFFFFF;font-weight:700;font-size:15px;text-align:center;vertical-align:middle">BB</td>
+                <td style="width:40px;height:40px;background:#C8922B;border-radius:12px;color:#FFFFFF;font-weight:700;font-size:15px;text-align:center;vertical-align:middle">BB</td>
                 <td style="padding-left:10px;font-weight:700;font-size:17px">Back to Burkina</td>
             </tr></table>
         </td></tr>
         <tr><td style="padding:16px 28px 0;font-size:15px;line-height:1.6">
-            Voici votre code de vérification :
+            {{ $intro }}
         </td></tr>
         <tr><td style="padding:16px 28px">
-            <div style="background:#F0F7FF;border:1px solid #DCEBFF;border-radius:10px;padding:18px;text-align:center;font-size:34px;font-weight:700;letter-spacing:10px;color:#005BBF">{{ $code }}</div>
+            <div style="background:#F0F7FF;border:1px solid #DCEBFF;border-radius:10px;padding:18px;text-align:center;font-size:34px;font-weight:700;letter-spacing:10px;color:#0A1C42">{{ $code }}</div>
         </td></tr>
         <tr><td style="padding:0 28px 28px;font-size:14px;line-height:1.6;color:#686C73">
             Il expire dans {{ $minutes }} minutes. Ne le communiquez à personne : l’équipe Travel Express ne vous le demandera jamais.<br><br>

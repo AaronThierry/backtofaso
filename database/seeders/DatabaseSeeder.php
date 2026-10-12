@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         $admin = User::factory()->create([
             'first_name' => 'Admin', 'last_name' => 'Travel Express',
             'phone' => env('ADMIN_PHONE', '+22670000000'),
-            'email' => 'admin@backtoburkina.bf',
+            'email' => env('ADMIN_EMAIL', 'admin@backtoburkina.bf'),
             'role' => User::ROLE_ADMIN,
         ]);
         $agent = User::factory()->create([
@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
 
         // --- Candidate de démonstration ---
         $awa = User::factory()->create([
-            'first_name' => 'Awa', 'last_name' => 'Ouédraogo', 'phone' => '+22670000002',
+            'first_name' => 'Awa', 'last_name' => 'Ouédraogo', 'phone' => '+22670000002', 'email' => 'awa@exemple.bf',
             'role' => User::ROLE_CANDIDATE, 'last_degree' => 'Bac', 'interests' => ['Informatique'],
             'chinese_level' => 'none',
         ]);
@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
 
         // --- Étudiant en Chine ---
         $issouf = User::factory()->create([
-            'first_name' => 'Issouf', 'last_name' => 'Sawadogo', 'phone' => '+22670000003',
+            'first_name' => 'Issouf', 'last_name' => 'Sawadogo', 'phone' => '+22670000003', 'email' => 'issouf@exemple.bf',
             'role' => User::ROLE_STUDENT_ABROAD,
         ]);
 
@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
         $graduates = [];
         foreach ($talents as $i => [$first, $last, $field, $headline, $hsk, $availability, $skills]) {
             $user = User::factory()->create([
-                'first_name' => $first, 'last_name' => $last, 'phone' => '+2267000001'.$i,
+                'first_name' => $first, 'last_name' => $last, 'phone' => '+2267000001'.$i, 'email' => 'talent'.($i + 1).'@exemple.bf',
                 'role' => User::ROLE_GRADUATE,
             ]);
             $profile = TalentProfile::create([
@@ -78,7 +78,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $recruiter = User::factory()->create([
-            'first_name' => 'Recruteur', 'last_name' => 'Démo', 'phone' => '+22670000020',
+            'first_name' => 'Recruteur', 'last_name' => 'Démo', 'phone' => '+22670000020', 'email' => 'recruteur@exemple.bf',
             'role' => User::ROLE_RECRUITER,
         ]);
 

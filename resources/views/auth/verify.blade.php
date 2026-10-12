@@ -1,19 +1,20 @@
-<x-layouts.auth title="Vérification">
+<x-layouts.auth :title="$title">
     <div class="flex flex-1 flex-col gap-6"
          x-data="otp({{ config('backtoburkina.otp.length') }}, {{ (int) $wait }})">
         <div class="flex items-center gap-4">
             <a href="{{ $backUrl }}" aria-label="Retour" class="icon-btn"><x-icon name="back" /></a>
             @if ($step)
-                <x-progress-steps :current="$step" class="flex-1" />
+                <x-progress-steps :current="$step" :total="4" class="flex-1" />
             @endif
         </div>
 
         <div class="flex flex-col gap-3">
             <span class="flex size-14 items-center justify-center rounded-2xl bg-linear-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
-                <x-icon :name="str_contains($via, 'e-mail') ? 'mail' : 'phone'" :size="26" />
+                <x-icon name="mail" :size="26" />
             </span>
-            <h1 class="text-[30px] font-extrabold leading-[1.05] text-navy-950 lg:text-[36px]">Saisissez votre code</h1>
-            <p class="text-[15px] leading-relaxed text-ink-600">Nous avons envoyé un code à {{ config('backtoburkina.otp.length') }} chiffres {{ $via }} <b class="text-ink-900">{{ $destination }}</b>.@if (str_contains($via, 'e-mail')) Pensez à regarder dans les courriers indésirables.@endif</p>
+            <h1 class="text-[30px] font-extrabold leading-[1.05] text-navy-950 lg:text-[36px]">{{ $title }}</h1>
+            <p class="text-[15px] leading-relaxed text-ink-600">{{ $lead }} <b class="text-ink-900">{{ $destination }}</b>. Le code contient {{ config('backtoburkina.otp.length') }} chiffres et reste valable {{ config('backtoburkina.otp.ttl_minutes') }} minutes.</p>
+            <p class="flex items-center gap-2 text-[13px] text-ink-500"><x-icon name="help" :size="15" /> Rien reçu ? Regardez dans les courriers indésirables (spam).</p>
         </div>
 
         <x-flash />
@@ -21,7 +22,7 @@
         <form method="POST" action="{{ $action }}" x-ref="form" class="flex flex-col gap-5">
             @csrf
             <input type="hidden" name="code" :value="code">
-            {{-- Champ réel : clavier numérique natif + remplissage automatique du SMS sur iOS / Android --}}
+            {{-- Champ réel : clavier numérique natif + suggestion du code sur iOS / Android --}}
             <label class="relative block">
                 <span class="sr-only">Code de vérification</span>
                 <input x-ref="input" x-model="code" @input="code = code.replace(/\D/g, '').slice(0, len); if (code.length === len) $nextTick(() => $refs.form.submit())"
@@ -44,7 +45,7 @@
                 @else
                     <span></span>
                 @endif
-                <a href="{{ $backUrl }}" class="font-bold text-brand-600 hover:underline">Modifier mes informations</a>
+                <a href="{{ $backUrl }}" class="font-bold text-brand-600 hover:underline">{{ $backLabel }}</a>
             </div>
 
             <button type="submit" class="btn-primary min-h-[54px] text-base" :disabled="code.length < len">Vérifier</button>

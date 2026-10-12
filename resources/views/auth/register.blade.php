@@ -9,7 +9,7 @@
 
         <div class="flex items-center gap-4">
             <a href="{{ route('welcome') }}" aria-label="Retour" class="icon-btn"><x-icon name="back" /></a>
-            <x-progress-steps :current="1" :total="\App\Services\OtpService::enabled() ? 4 : 3" class="flex-1" />
+            <x-progress-steps :current="1" :total="4" class="flex-1" />
         </div>
 
         <div class="flex flex-col gap-2">
@@ -40,24 +40,23 @@
         </div>
 
         <label class="flex flex-col gap-1.5">
-            <span class="field-label">Téléphone</span>
+            <span class="field-label">Adresse e-mail</span>
             <span class="field-group">
-                <span class="flex h-full items-center gap-1.5 self-stretch border-r border-ink-200 bg-ink-50 px-3.5 text-[15px] font-semibold text-ink-800">+226</span>
-                <input name="phone" value="{{ old('phone') }}" inputmode="tel" autocomplete="tel-national" placeholder="70 00 00 00" required class="min-w-0 flex-1 bg-transparent px-3.5 text-[15px] outline-none placeholder:text-ink-400">
+                <x-icon name="mail" :size="19" class="ml-3.5 text-ink-400" />
+                <input name="email" type="email" inputmode="email" value="{{ old('email', $old['email'] ?? '') }}" autocomplete="email" placeholder="vous@exemple.com" required class="min-w-0 flex-1 bg-transparent px-3 text-[15px] outline-none placeholder:text-ink-400">
             </span>
-            <x-field-error name="phone" /><x-field-error name="phone_full" />
+            <span class="text-[12.5px] text-ink-600">Elle servira à vous connecter. Nous y enverrons un code pour la vérifier.</span>
+            <x-field-error name="email" />
         </label>
 
         <label class="flex flex-col gap-1.5">
-            <span class="field-label">E-mail @unless (\App\Services\OtpService::usesMail())<span class="font-medium text-ink-500">(facultatif)</span>@endunless</span>
+            <span class="field-label">Téléphone</span>
             <span class="field-group">
-                <x-icon name="mail" :size="19" class="ml-3.5 text-ink-400" />
-                <input name="email" type="email" value="{{ old('email', $old['email'] ?? '') }}" autocomplete="email" placeholder="vous@exemple.com" @required(\App\Services\OtpService::usesMail()) class="min-w-0 flex-1 bg-transparent px-3 text-[15px] outline-none placeholder:text-ink-400">
+                <span class="flex h-full items-center gap-1.5 self-stretch border-r border-ink-200 bg-ink-50 px-3.5 text-[15px] font-semibold text-ink-800">+226</span>
+                <input name="phone" value="{{ old('phone', isset($old['phone']) ? preg_replace('/^\+226/', '', $old['phone']) : '') }}" inputmode="tel" autocomplete="tel-national" placeholder="70 00 00 00" required class="min-w-0 flex-1 bg-transparent px-3.5 text-[15px] outline-none placeholder:text-ink-400">
             </span>
-            @if (\App\Services\OtpService::usesMail())
-                <span class="text-[12.5px] text-ink-600">Votre code de vérification sera envoyé à cette adresse.</span>
-            @endif
-            <x-field-error name="email" />
+            <span class="text-[12.5px] text-ink-600">Pour que votre conseiller puisse vous joindre.</span>
+            <x-field-error name="phone" /><x-field-error name="phone_full" />
         </label>
 
         <label class="flex flex-col gap-1.5">
@@ -85,7 +84,7 @@
 
         <div class="mt-auto flex flex-col items-center gap-3 pt-2">
             <button type="submit" class="btn-primary min-h-[54px] w-full text-base" :disabled="!terms || loading">
-                <span x-show="!loading" class="flex items-center gap-2">@if (! \App\Services\OtpService::enabled()) Créer mon compte @elseif (\App\Services\OtpService::usesMail()) Recevoir le code par e-mail @else Recevoir le code par SMS @endif <x-icon name="arrow" :size="18" /></span>
+                <span x-show="!loading" class="flex items-center gap-2">Recevoir mon code par e-mail <x-icon name="arrow" :size="18" /></span>
                 <span x-show="loading" x-cloak class="flex items-center gap-2"><span class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span> Un instant…</span>
             </button>
             <span class="text-[13.5px] text-ink-600">Déjà inscrit ? <a href="{{ route('login') }}" class="font-bold text-brand-600 hover:underline">Se connecter</a></span>

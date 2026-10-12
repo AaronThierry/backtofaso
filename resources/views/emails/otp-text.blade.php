@@ -1,10 +1,22 @@
-Back to Burkina
+BACK TO BURKINA · par Travel Express
+====================================
 
-{{ $intro }}
+{!! $heading !!}
 
-{{ $code }}
+{!! $intro !!}
 
-Il expire dans {{ $minutes }} minutes. Ne le communiquez à personne.
-Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.
+    Votre code : {{ $code }}
+    Valable {{ $minutes }} minutes
 
-Cet e-mail est envoyé automatiquement, merci de ne pas y répondre.
+{!! $instructions !!}
+
+Ne communiquez jamais ce code. L’équipe Travel Express ne vous le demandera jamais, ni par téléphone, ni par message.
+
+{!! $ignore !!}
+
+--
+Back to Burkina · Étudier en Chine, revenir bâtir le Faso.
+Un service Travel Express · Bobo-Dioulasso, Burkina Faso
+{{ config('app.url') }}
+
+Cet e-mail vous a été envoyé automatiquement, merci de ne pas y répondre.

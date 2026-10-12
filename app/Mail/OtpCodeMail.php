@@ -24,10 +24,20 @@ class OtpCodeMail extends Mailable
 
     public function content(): Content
     {
-        return new Content(view: 'emails.otp', text: 'emails.otp-text', with: [
-            'intro' => $this->purpose === OtpService::LOGIN
-                ? 'Voici votre code pour vous connecter à votre espace Back to Burkina :'
-                : 'Bienvenue ! Voici votre code pour confirmer votre adresse e-mail et créer votre compte :',
+        $login = $this->purpose === OtpService::LOGIN;
+
+        return new Content(view: 'emails.otp', text: 'emails.otp-text', with: $login ? [
+            'badge' => 'Connexion',
+            'heading' => 'Votre code de connexion',
+            'intro' => 'Une connexion à votre espace Back to Burkina vient d’être demandée. Pour la confirmer, utilisez le code ci-dessous.',
+            'instructions' => 'Saisissez-le sur la page de connexion pour accéder à votre espace : dossier, messages et communauté.',
+            'ignore' => 'Vous n’êtes pas à l’origine de cette connexion ? Quelqu’un connaît peut-être votre mot de passe : changez-le dès que possible et prévenez votre conseiller.',
+        ] : [
+            'badge' => 'Création de compte',
+            'heading' => 'Bienvenue sur Back to Burkina',
+            'intro' => 'Merci de nous rejoindre ! Il ne reste qu’une étape : confirmer votre adresse e-mail avec le code ci-dessous.',
+            'instructions' => 'Saisissez-le sur la page d’inscription pour créer votre compte, puis complétez votre profil en quelques clics.',
+            'ignore' => 'Vous n’avez pas demandé à créer de compte ? Ignorez simplement cet e-mail : aucun compte ne sera créé sans ce code.',
         ]);
     }
 }

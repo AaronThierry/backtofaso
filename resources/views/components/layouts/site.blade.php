@@ -30,8 +30,24 @@
                     <a href="{{ route('login') }}" class="btn-secondary hidden min-h-11 text-sm sm:inline-flex">Se connecter</a>
                     <a href="{{ route('welcome') }}" class="btn-primary min-h-11 text-sm">Créer mon compte</a>
                 @endauth
+                <button type="button" @click="open = !open" :aria-expanded="open" aria-controls="menu-mobile" aria-label="Menu" class="flex size-11 items-center justify-center rounded-full border border-ink-200 md:hidden">
+                    <x-icon name="menu" x-show="!open" />
+                    <x-icon name="close" x-show="open" x-cloak />
+                </button>
             </div>
         </div>
+
+        {{-- Menu mobile --}}
+        <nav id="menu-mobile" x-show="open" x-cloak x-transition.opacity class="border-t border-ink-200 bg-white md:hidden" aria-label="Navigation du site">
+            <div class="mx-auto flex max-w-6xl flex-col px-4 py-2 sm:px-6">
+                @foreach (['#parcours' => 'Étudier en Chine', '#communaute' => 'Communauté', '#talents' => 'Talents', '#entreprises' => 'Entreprises', '#faq' => 'FAQ'] as $href => $label)
+                    <a href="{{ $href }}" @click="open = false" class="flex min-h-12 items-center border-b border-ink-100 text-[15px] font-semibold last:border-0">{{ $label }}</a>
+                @endforeach
+                @guest
+                    <a href="{{ route('login') }}" class="btn-secondary my-3 sm:hidden">Se connecter</a>
+                @endguest
+            </div>
+        </nav>
     </header>
 
     <main>{{ $slot }}</main>

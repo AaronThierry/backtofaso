@@ -1,5 +1,11 @@
 <x-layouts.app :title="$conversation->displayNameFor($user)" active="chat" :bare="true">
-    <div class="flex h-dvh flex-col bg-ink-50"
+    <div class="lg:grid lg:h-dvh lg:grid-cols-[minmax(320px,400px)_minmax(0,1fr)]">
+    {{-- Ordinateur : liste des conversations à gauche --}}
+    <div class="hidden flex-col gap-4 overflow-y-auto border-r border-ink-200 bg-white p-6 lg:flex">
+        @include('app.chat._list', $list + ['activeId' => $conversation->id])
+    </div>
+
+    <div class="flex h-dvh min-w-0 flex-col bg-ink-50"
          x-data="chatRoom({
             fetchUrl: @js(route('chat.messages', $conversation)),
             postUrl: @js(route('chat.store', $conversation)),
@@ -7,9 +13,9 @@
             initial: @js($initialMessages),
          })">
         {{-- En-tête --}}
-        <header class="flex flex-col gap-3 border-b border-ink-200 bg-white px-4 pb-3 pt-[calc(env(safe-area-inset-top)+12px)]">
+        <header class="flex flex-col gap-3 border-b border-ink-200 bg-white px-4 pb-3 pt-[calc(env(safe-area-inset-top)+12px)] lg:px-6 lg:pt-4">
             <div class="flex items-center gap-2.5">
-                <a href="{{ route('chat.index') }}" aria-label="Retour" class="flex size-11 items-center justify-center rounded-full"><x-icon name="back" :size="22" /></a>
+                <a href="{{ route('chat.index') }}" aria-label="Retour" class="flex size-11 items-center justify-center rounded-full lg:hidden"><x-icon name="back" :size="22" /></a>
                 @if ($conversation->isSuper())
                     <x-logo :size="42" />
                 @else
@@ -40,7 +46,7 @@
         @endif
 
         {{-- Messages --}}
-        <div x-ref="list" class="flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-4">
+        <div x-ref="list" class="flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-4 lg:px-8 lg:py-6">
             <template x-if="messages.length === 0">
                 <p class="m-auto text-sm text-ink-600">Aucun message pour l’instant.</p>
             </template>
@@ -49,7 +55,7 @@
                     <template x-if="!m.mine">
                         <span class="flex size-[34px] shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700" x-text="m.initials"></span>
                     </template>
-                    <div class="flex max-w-[78%] flex-col gap-1.5 rounded-2xl px-3 py-2.5 lg:max-w-[60%]"
+                    <div class="flex max-w-[78%] flex-col gap-1.5 rounded-2xl px-3 py-2.5 lg:max-w-[60%] xl:max-w-[50%]"
                          :class="m.mine ? 'rounded-br-sm bg-brand-600 text-white' : 'rounded-bl-sm bg-white'">
                         <template x-if="!m.mine">
                             <span class="flex items-center gap-1.5">
@@ -72,7 +78,7 @@
 
         {{-- Saisie --}}
         @if ($canPost)
-            <form @submit.prevent="send" class="flex items-center gap-2 border-t border-ink-200 bg-white px-3 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-2.5">
+            <form @submit.prevent="send" class="flex items-center gap-2 border-t border-ink-200 bg-white px-3 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-2.5 lg:px-6 lg:py-4">
                 <label class="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-ink-100" aria-label="Joindre un fichier">
                     <x-icon name="plus" stroke-width="2" />
                     <input type="file" x-ref="file" class="sr-only" @change="fileName = $event.target.files[0]?.name ?? ''">
@@ -88,6 +94,7 @@
                 <x-icon name="lock" :size="16" /> Seule l’équipe Travel Express publie dans ce thème
             </div>
         @endif
+    </div>
     </div>
 
     @push('scripts')

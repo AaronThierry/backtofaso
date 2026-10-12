@@ -1,5 +1,5 @@
-<x-layouts.app title="Mon profil talent" active="talents">
-    <form method="POST" action="{{ route('talents.update') }}" enctype="multipart/form-data" class="flex flex-col gap-4">
+<x-layouts.app title="Mon profil talent" active="talents" width="narrow">
+    <form method="POST" action="{{ route('talents.update') }}" enctype="multipart/form-data" class="flex flex-col gap-4 lg:rounded-2xl lg:border lg:border-ink-200 lg:bg-white lg:p-8">
         @csrf @method('PUT')
         <div class="flex items-center gap-3">
             <a href="{{ route('talents.show', $profile) }}" aria-label="Retour" class="flex size-11 items-center justify-center rounded-full border border-ink-200 bg-white"><x-icon name="back" /></a>
@@ -52,6 +52,9 @@
         <label class="flex items-center gap-3"><input type="checkbox" name="is_public" value="1" @checked(old('is_public', $profile->is_public)) class="size-5 accent-brand-600">
             <span class="text-sm">Rendre mon profil visible des recruteurs</span></label>
 
-        <button class="btn-primary min-h-[52px]">Enregistrer</button>
+        <div class="flex flex-col gap-2.5 sm:flex-row-reverse sm:justify-start">
+            <button class="btn-primary min-h-[52px] sm:px-8">Enregistrer</button>
+            <a href="{{ route('talents.show', $profile) }}" class="btn-ghost min-h-[52px] text-ink-900">Annuler</a>
+        </div>
     </form>
 </x-layouts.app>

@@ -16,23 +16,30 @@ class ChatController extends Controller
     public function index(Request $request): View
     {
         $user = $request->user();
-        $filter = $request->query('filtre', 'tous');
 
+        return view('app.chat.index', ['user' => $user, ...$this->conversationList($user, $request->query('filtre', 'tous'))]);
+    }
+
+    /** Liste des conversations (page Chat, et colonne de gauche d'une conversation sur ordinateur) */
+    private function conversationList(User $user, string $filter): array
+    {
         $conversations = Conversation::forUser($user)
             ->with(['latestMessage.user', 'users'])
             ->orderByRaw("type = 'super' desc")
             ->orderByDesc('last_message_at')
             ->get();
 
-        $super = $conversations->firstWhere('type', Conversation::SUPER);
-        $groups = $conversations->where('type', Conversation::GROUP);
-        $directs = $conversations->where('type', Conversation::DIRECT);
-
         $publicGroups = Conversation::where('type', Conversation::GROUP)->where('is_public', true)
             ->whereDoesntHave('users', fn ($q) => $q->whereKey($user->id))
             ->withCount('users')->latest()->take(5)->get();
 
-        return view('app.chat.index', compact('user', 'filter', 'super', 'groups', 'directs', 'publicGroups'));
+        return [
+            'filter' => $filter,
+            'super' => $conversations->firstWhere('type', Conversation::SUPER),
+            'groups' => $conversations->where('type', Conversation::GROUP),
+            'directs' => $conversations->where('type', Conversation::DIRECT),
+            'publicGroups' => $publicGroups,
+        ];
     }
 
     public function show(Request $request, Conversation $conversation): View
@@ -62,6 +69,7 @@ class ChatController extends Controller
             'canPost' => $conversation->canPost($user, $topic),
             'initialMessages' => $messages->map->toChatArray($user),
             'membersCount' => $conversation->users->count(),
+            'list' => $this->conversationList($user, 'tous'),
         ]);
     }
 

@@ -24,7 +24,10 @@ $paths = [
     'phone' => '<rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/>',
     'logout' => '<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>',
     'play' => '<path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/>',
+    'mail' => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
     'bookmark' => '<path d="M6 3h12v18l-6-4-6 4z"/>',
+    'menu' => '<path d="M4 7h16M4 12h16M4 17h16"/>',
+    'close' => '<path d="M6 6l12 12M18 6L6 18"/>',
 ];
 @endphp
 <svg width="{{ $size }}" height="{{ $size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" {{ $attributes->merge(['stroke-width' => '1.8']) }}>{!! $paths[$name] ?? '' !!}</svg>

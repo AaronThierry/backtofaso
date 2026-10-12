@@ -1,5 +1,5 @@
-<x-layouts.app title="Nouveau groupe" active="chat">
-    <form method="POST" action="{{ route('groups.store') }}" enctype="multipart/form-data" class="flex flex-col gap-[18px]"
+<x-layouts.app title="Nouveau groupe" active="chat" width="narrow">
+    <form method="POST" action="{{ route('groups.store') }}" enctype="multipart/form-data" class="flex flex-col gap-[18px] lg:rounded-2xl lg:border lg:border-ink-200 lg:bg-white lg:p-8"
           x-data="{ isPublic: '{{ old('is_public', '0') }}', members: @js(array_map('intval', old('members', []))), preview: null }">
         @csrf
         <div class="flex items-center gap-3">
@@ -34,8 +34,8 @@
             </div>
         </fieldset>
 
-        <fieldset class="flex flex-col">
-            <legend class="mb-2 flex w-full justify-between"><span class="field-label">Ajouter des membres</span><span class="text-[13px] font-bold text-brand-600" x-text="members.length + ' sélectionné(s)'"></span></legend>
+        <fieldset class="flex flex-col sm:grid sm:grid-cols-2 sm:gap-x-6">
+            <legend class="mb-2 flex w-full justify-between sm:col-span-2"><span class="field-label">Ajouter des membres</span><span class="text-[13px] font-bold text-brand-600" x-text="members.length + ' sélectionné(s)'"></span></legend>
             @foreach ($people as $p)
                 <label class="flex min-h-[58px] cursor-pointer items-center gap-3 border-b border-ink-100">
                     <x-avatar :user="$p" :size="42" />
@@ -45,6 +45,6 @@
             @endforeach
         </fieldset>
 
-        <button class="btn-primary sticky bottom-[calc(env(safe-area-inset-bottom)+92px)] min-h-[52px] lg:bottom-4">Créer le groupe</button>
+        <button class="btn-primary sticky bottom-[calc(env(safe-area-inset-bottom)+92px)] min-h-[52px] lg:static lg:self-end lg:px-8">Créer le groupe</button>
     </form>
 </x-layouts.app>

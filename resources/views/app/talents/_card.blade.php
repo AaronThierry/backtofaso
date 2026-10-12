@@ -1,4 +1,4 @@
-<a href="{{ route('talents.show', $profile) }}" class="card flex gap-3 p-3.5">
+<a href="{{ route('talents.show', $profile) }}" class="card flex gap-3 p-3.5 transition hover:border-brand-300 hover:shadow-sm lg:p-4">
     <x-avatar :user="$profile->user" :size="48" />
     <span class="flex min-w-0 flex-1 flex-col gap-1">
         <span class="flex items-center justify-between gap-2">

@@ -1,6 +1,6 @@
 @php($last = $conversation->latestMessage)
 @php($unread = $conversation->unreadCountFor($user))
-<a href="{{ route('chat.show', $conversation) }}" class="flex min-h-16 items-center gap-3 border-b border-ink-100 py-2">
+<a href="{{ route('chat.show', $conversation) }}" @class(['flex min-h-16 items-center gap-3 border-b border-ink-100 py-2 lg:-mx-2 lg:rounded-lg lg:border-transparent lg:px-2', 'lg:bg-brand-50' => $active ?? false, 'lg:hover:bg-ink-50' => ! ($active ?? false)])>
     <x-avatar :initials="$conversation->initials($user)" :size="46" :tone="$conversation->type === 'direct' ? 'green' : 'ink'" :square="$conversation->type !== 'direct'" />
     <span class="flex min-w-0 flex-1 flex-col gap-0.5">
         <span class="flex justify-between gap-2">

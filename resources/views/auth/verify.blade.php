@@ -9,8 +9,8 @@
         </div>
 
         <div class="flex flex-col gap-1.5">
-            <h1 class="text-[26px] font-bold leading-tight">Vérifiez votre numéro</h1>
-            <p class="text-[14.5px] leading-relaxed text-ink-600">Saisissez le code à {{ config('backtoburkina.otp.length') }} chiffres envoyé par SMS au <b class="text-ink-900">{{ $phone }}</b>.</p>
+            <h1 class="text-[26px] font-bold leading-tight">Saisissez votre code</h1>
+            <p class="text-[14.5px] leading-relaxed text-ink-600">Saisissez le code à {{ config('backtoburkina.otp.length') }} chiffres envoyé {{ $via }} <b class="text-ink-900">{{ $destination }}</b>.@if (str_contains($via, 'e-mail')) Pensez à regarder dans les courriers indésirables.@endif</p>
         </div>
 
         <x-flash />

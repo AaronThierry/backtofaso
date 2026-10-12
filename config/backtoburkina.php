@@ -8,6 +8,10 @@ return [
     ],
 
     'otp' => [
+        // false : aucune vérification par code (inscription directe, connexion par mot de passe uniquement)
+        'enabled' => (bool) env('OTP_ENABLED', false),
+        // mail : code envoyé par e-mail (adresse obligatoire à l'inscription) | sms : code envoyé par SMS
+        'channel' => env('OTP_CHANNEL', 'mail'),
         'length' => 6,
         'ttl_minutes' => 10,
         'max_attempts' => 5,

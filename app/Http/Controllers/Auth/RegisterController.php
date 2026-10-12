@@ -51,25 +51,36 @@ class RegisterController extends Controller
             'last_name' => ['required', 'string', 'max:60'],
             'phone' => ['required', 'string', 'max:20'],
             'phone_full' => ['required', 'regex:/^\+\d{8,15}$/', 'unique:users,phone'],
-            'email' => ['nullable', 'email', 'max:120', 'unique:users,email'],
+            'email' => [OtpService::usesMail() ? 'required' : 'nullable', 'email', 'max:120', 'unique:users,email'],
             'password' => ['required', Password::min(8)->numbers()],
             'terms' => ['accepted'],
         ], [
             'phone_full.unique' => 'Ce numéro a déjà un compte. Connectez-vous.',
+            'email.unique' => 'Cette adresse e-mail a déjà un compte. Connectez-vous.',
+            'email.required' => 'L’adresse e-mail est nécessaire pour recevoir votre code.',
             'phone_full.regex' => 'Numéro de téléphone invalide.',
             'terms.accepted' => 'Vous devez accepter les conditions d’utilisation.',
         ]);
 
-        session(['register' => [
+        $pending = [
             'role' => $data['role'],
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'phone' => $data['phone_full'],
             'email' => $data['email'] ?? null,
             'password' => Hash::make($data['password']),
-        ]]);
+        ];
 
-        $this->sendCode($data['phone_full']);
+        // Vérification par code désactivée : le compte est créé directement
+        if (! OtpService::enabled()) {
+            return $this->completeRegistration($request, $pending, verified: false);
+        }
+
+        session(['register' => $pending]);
+
+        if (! $this->sendCode($data['phone_full'], $data['email'] ?? null)) {
+            return back()->withInput()->withErrors(['email' => 'Impossible d’envoyer le code pour le moment. Réessayez dans un instant.']);
+        }
 
         return redirect()->route('register.verify');
     }
@@ -78,12 +89,15 @@ class RegisterController extends Controller
     public function verifyForm(): View|RedirectResponse
     {
         $pending = session('register');
-        if (! $pending) {
+        if (! $pending || ! OtpService::enabled()) {
             return redirect()->route('register');
         }
 
+        $byMail = OtpService::channelFor($pending['email']) === 'mail';
+
         return view('auth.verify', [
-            'phone' => OtpService::format($pending['phone']),
+            'via' => $byMail ? 'par e-mail à' : 'par SMS au',
+            'destination' => $byMail ? OtpService::maskEmail($pending['email']) : OtpService::format($pending['phone']),
             'action' => route('register.verify.store'),
             'resendAction' => route('register.resend'),
             'backUrl' => route('register'),
@@ -95,7 +109,7 @@ class RegisterController extends Controller
     public function verify(Request $request): RedirectResponse
     {
         $pending = session('register');
-        if (! $pending) {
+        if (! $pending || ! OtpService::enabled()) {
             return redirect()->route('register');
         }
 
@@ -106,11 +120,19 @@ class RegisterController extends Controller
             return back()->withErrors(['code' => $result]);
         }
 
-        $user = DB::transaction(function () use ($pending) {
+        session()->forget('register');
+
+        return $this->completeRegistration($request, $pending, verified: true);
+    }
+
+    /** Crée le compte, l'ajoute au super-groupe, ouvre son dossier et le connecte */
+    private function completeRegistration(Request $request, array $pending, bool $verified): RedirectResponse
+    {
+        $user = DB::transaction(function () use ($pending, $verified) {
             $user = User::create([
                 ...$pending,
                 'password' => $pending['password'], // déjà haché
-                'phone_verified_at' => now(),
+                'phone_verified_at' => $verified ? now() : null,
             ]);
 
             Conversation::superGroup()->users()->syncWithoutDetaching([$user->id => ['role' => 'member']]);
@@ -122,7 +144,6 @@ class RegisterController extends Controller
             return $user;
         });
 
-        session()->forget('register');
         Auth::login($user, true);
         $request->session()->regenerate();
 
@@ -132,7 +153,7 @@ class RegisterController extends Controller
     public function resend(): RedirectResponse
     {
         $pending = session('register');
-        if (! $pending) {
+        if (! $pending || ! OtpService::enabled()) {
             return redirect()->route('register');
         }
 
@@ -140,17 +161,27 @@ class RegisterController extends Controller
             return back()->withErrors(['code' => 'Patientez avant de demander un nouveau code.']);
         }
 
-        $this->sendCode($pending['phone']);
+        if (! $this->sendCode($pending['phone'], $pending['email'])) {
+            return back()->withErrors(['code' => 'Impossible d’envoyer le code pour le moment. Réessayez dans un instant.']);
+        }
 
         return back()->with('status', 'Un nouveau code a été envoyé.');
     }
 
-    private function sendCode(string $phone): void
+    private function sendCode(string $phone, ?string $email): bool
     {
-        $code = $this->otp->send($phone);
+        try {
+            $code = $this->otp->send($phone, $email);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return false;
+        }
 
         if (app()->isLocal() && config('backtoburkina.otp.show_in_dev')) {
             session()->flash('dev_code', $code);
         }
+
+        return true;
     }
 }

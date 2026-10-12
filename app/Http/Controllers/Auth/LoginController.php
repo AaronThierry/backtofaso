@@ -40,18 +40,29 @@ class LoginController extends Controller
         return redirect()->intended(route('dashboard'));
     }
 
-    /** Connexion sans mot de passe : envoi d'un code par SMS */
+    /** Connexion sans mot de passe : envoi d'un code par e-mail (ou SMS) */
     public function sendCode(Request $request): RedirectResponse
     {
+        abort_unless(OtpService::enabled(), 404);
         $request->validate(['login' => ['required', 'string']]);
-        $phone = OtpService::normalize($request->input('login'));
+        $login = trim($request->input('login'));
 
-        if (! User::where('phone', $phone)->exists()) {
-            return back()->withInput()->withErrors(['login' => 'Aucun compte avec ce numéro.']);
+        $user = filter_var($login, FILTER_VALIDATE_EMAIL)
+            ? User::where('email', $login)->first()
+            : User::where('phone', OtpService::normalize($login))->first();
+
+        if (! $user) {
+            return back()->withInput()->withErrors(['login' => 'Aucun compte avec cet identifiant.']);
         }
 
-        $code = $this->otp->send($phone);
-        session(['login_phone' => $phone]);
+        try {
+            $code = $this->otp->send($user->phone, $user->email);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->withInput()->withErrors(['login' => 'Impossible d’envoyer le code pour le moment. Réessayez dans un instant.']);
+        }
+        session(['login_phone' => $user->phone]);
         if (app()->isLocal() && config('backtoburkina.otp.show_in_dev')) {
             session()->flash('dev_code', $code);
         }
@@ -62,12 +73,16 @@ class LoginController extends Controller
     public function codeForm(): View|RedirectResponse
     {
         $phone = session('login_phone');
-        if (! $phone) {
+        if (! $phone || ! OtpService::enabled()) {
             return redirect()->route('login');
         }
 
+        $email = User::where('phone', $phone)->value('email');
+        $byMail = OtpService::channelFor($email) === 'mail';
+
         return view('auth.verify', [
-            'phone' => OtpService::format($phone),
+            'via' => $byMail ? 'par e-mail à' : 'par SMS au',
+            'destination' => $byMail ? OtpService::maskEmail($email) : OtpService::format($phone),
             'action' => route('login.code.verify'),
             'resendAction' => null,
             'backUrl' => route('login'),
@@ -79,7 +94,7 @@ class LoginController extends Controller
     public function verifyCode(Request $request): RedirectResponse
     {
         $phone = session('login_phone');
-        if (! $phone) {
+        if (! $phone || ! OtpService::enabled()) {
             return redirect()->route('login');
         }
         $request->validate(['code' => ['required', 'digits:'.config('backtoburkina.otp.length')]]);

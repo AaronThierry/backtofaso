@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\PhoneVerification;
+use App\Mail\OtpCodeMail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class OtpService
 {
@@ -32,8 +34,35 @@ class OtpService
         return $phone;
     }
 
-    /** Génère et envoie un code. Retourne le code (affiché seulement en local). */
-    public function send(string $phone): string
+    /** Canal utilisé pour une personne : e-mail si configuré et si elle a une adresse, sinon SMS */
+    public static function channelFor(?string $email): string
+    {
+        return config('backtoburkina.otp.channel') === 'mail' && $email ? 'mail' : 'sms';
+    }
+
+    public static function enabled(): bool
+    {
+        return config('backtoburkina.otp.enabled');
+    }
+
+    public static function usesMail(): bool
+    {
+        return self::enabled() && config('backtoburkina.otp.channel') === 'mail';
+    }
+
+    /** « a****@gmail.com » */
+    public static function maskEmail(string $email): string
+    {
+        [$name, $domain] = explode('@', $email) + [1 => ''];
+
+        return mb_substr($name, 0, 1).str_repeat('•', max(2, mb_strlen($name) - 1)).'@'.$domain;
+    }
+
+    /**
+     * Génère et envoie un code (par e-mail ou SMS). Le code est rattaché au numéro de téléphone.
+     * Retourne le code (affiché seulement en local).
+     */
+    public function send(string $phone, ?string $email = null): string
     {
         $length = config('backtoburkina.otp.length');
         $code = str_pad((string) random_int(0, 10 ** $length - 1), $length, '0', STR_PAD_LEFT);
@@ -45,7 +74,11 @@ class OtpService
             'expires_at' => now()->addMinutes(config('backtoburkina.otp.ttl_minutes')),
         ]);
 
-        $this->sms->send($phone, "Back to Burkina : votre code est {$code}. Il expire dans ".config('backtoburkina.otp.ttl_minutes').' minutes.');
+        if (self::channelFor($email) === 'mail') {
+            Mail::to($email)->send(new OtpCodeMail($code, config('backtoburkina.otp.ttl_minutes')));
+        } else {
+            $this->sms->send($phone, "Back to Burkina : votre code est {$code}. Il expire dans ".config('backtoburkina.otp.ttl_minutes').' minutes.');
+        }
 
         return $code;
     }

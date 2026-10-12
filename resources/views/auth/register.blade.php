@@ -5,7 +5,7 @@
 
         <div class="flex items-center gap-3">
             <a href="{{ route('welcome') }}" aria-label="Retour" class="flex size-11 shrink-0 items-center justify-center rounded-full border border-ink-200"><x-icon name="back" /></a>
-            <x-progress-steps :current="1" class="flex-1" />
+            <x-progress-steps :current="1" :total="\App\Services\OtpService::enabled() ? 4 : 3" class="flex-1" />
         </div>
 
         <div class="flex flex-col gap-1.5">
@@ -41,8 +41,11 @@
         </label>
 
         <label class="flex flex-col gap-1.5">
-            <span class="field-label">E-mail <span class="font-medium text-ink-600">(facultatif)</span></span>
-            <input name="email" type="email" value="{{ old('email', $old['email'] ?? '') }}" autocomplete="email" placeholder="vous@exemple.com" class="field">
+            <span class="field-label">E-mail @unless (\App\Services\OtpService::usesMail())<span class="font-medium text-ink-600">(facultatif)</span>@endunless</span>
+            <input name="email" type="email" value="{{ old('email', $old['email'] ?? '') }}" autocomplete="email" placeholder="vous@exemple.com" @required(\App\Services\OtpService::usesMail()) class="field">
+            @if (\App\Services\OtpService::usesMail())
+                <span class="text-[12.5px] text-ink-600">Votre code de vérification sera envoyé à cette adresse.</span>
+            @endif
             <x-field-error name="email" />
         </label>
 
@@ -63,7 +66,7 @@
         <x-field-error name="terms" />
 
         <div class="mt-auto flex flex-col items-center gap-2.5 pt-4">
-            <button type="submit" class="btn-primary min-h-[52px] w-full text-base" :disabled="!terms" :class="!terms && 'opacity-50'">Recevoir le code par SMS</button>
+            <button type="submit" class="btn-primary min-h-[52px] w-full text-base" :disabled="!terms" :class="!terms && 'opacity-50'">@if (! \App\Services\OtpService::enabled()) Créer mon compte @elseif (\App\Services\OtpService::usesMail()) Recevoir le code par e-mail @else Recevoir le code par SMS @endif</button>
             <span class="text-[13.5px] text-ink-600">Déjà inscrit ? <a href="{{ route('login') }}" class="font-bold text-brand-600">Se connecter</a></span>
         </div>
     </form>

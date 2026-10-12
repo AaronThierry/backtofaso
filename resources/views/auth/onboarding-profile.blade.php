@@ -4,7 +4,7 @@
         @csrf
         <div class="flex items-center gap-3">
             <span class="flex size-11 shrink-0 items-center justify-center rounded-full border border-ink-200 text-ink-300"><x-icon name="back" /></span>
-            <x-progress-steps :current="3" class="flex-1" />
+            <x-progress-steps :current="\App\Services\OtpService::enabled() ? 3 : 2" :total="\App\Services\OtpService::enabled() ? 4 : 3" class="flex-1" />
         </div>
 
         <div class="flex flex-col gap-1.5">

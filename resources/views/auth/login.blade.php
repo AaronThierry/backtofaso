@@ -24,13 +24,15 @@
             <button type="submit" class="btn-primary min-h-[52px] text-base">Se connecter</button>
         </form>
 
-        <div class="flex items-center gap-3 text-[13px] text-ink-600"><span class="h-px flex-1 bg-ink-100"></span>ou<span class="h-px flex-1 bg-ink-100"></span></div>
+        @if (\App\Services\OtpService::enabled())
+            <div class="flex items-center gap-3 text-[13px] text-ink-600"><span class="h-px flex-1 bg-ink-100"></span>ou<span class="h-px flex-1 bg-ink-100"></span></div>
 
-        <form method="POST" action="{{ route('login.code') }}" x-data @submit="$refs.login.value = document.querySelector('#login-form [name=login]').value">
-            @csrf
-            <input type="hidden" name="login" x-ref="login">
-            <button type="submit" class="btn-secondary min-h-[52px] w-full"><x-icon name="phone" /> Recevoir un code par SMS</button>
-        </form>
+            <form method="POST" action="{{ route('login.code') }}" x-data @submit="$refs.login.value = document.querySelector('#login-form [name=login]').value">
+                @csrf
+                <input type="hidden" name="login" x-ref="login">
+                <button type="submit" class="btn-secondary min-h-[52px] w-full"><x-icon :name="\App\Services\OtpService::usesMail() ? 'mail' : 'phone'" /> {{ \App\Services\OtpService::usesMail() ? 'Recevoir un code par e-mail' : 'Recevoir un code par SMS' }}</button>
+            </form>
+        @endif
 
         <p class="mt-auto pt-6 text-center text-sm text-ink-600">Pas encore de compte ? <a href="{{ route('welcome') }}" class="font-bold text-brand-600">Créer un compte</a></p>
     </div>

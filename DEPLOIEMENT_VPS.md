@@ -104,6 +104,13 @@ MAIL_PASSWORD=MOT_DE_PASSE_DE_LA_BOITE
 MAIL_FROM_ADDRESS="noreply@backtoburkina.bf"
 
 OTP_SHOW_IN_DEV=false
+
+# Coordonnées affichées sur le site ; CONTACT_EMAIL reçoit le formulaire de contact
+CONTACT_EMAIL=contact@backtoburkina.bf
+CONTACT_PHONE="+226 XX XX XX XX"
+CONTACT_WHATSAPP=226XXXXXXXX
+CONTACT_ADDRESS="Adresse de l’agence, Bobo-Dioulasso"
+CONTACT_HOURS="Du lundi au vendredi, 8 h – 17 h"
 ```
 
 ```bash

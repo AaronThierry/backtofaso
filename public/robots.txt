@@ -1,2 +1,11 @@
 User-agent: *
-Disallow:
+Disallow: /accueil
+Disallow: /dossier
+Disallow: /chat
+Disallow: /groupes
+Disallow: /talents
+Disallow: /compte
+Disallow: /inscription/
+Disallow: /connexion/verification
+
+Sitemap: https://backtoburkina.bf/sitemap.xml

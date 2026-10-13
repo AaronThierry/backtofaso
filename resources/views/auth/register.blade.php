@@ -78,7 +78,7 @@
 
         <label class="flex cursor-pointer items-start gap-3 rounded-xl p-1">
             <input type="checkbox" name="terms" value="1" x-model="terms" class="mt-0.5 size-5 shrink-0 rounded accent-brand-600">
-            <span class="text-[13.5px] leading-snug text-ink-700">J’accepte les <a href="#" class="font-semibold text-brand-600 underline-offset-2 hover:underline">conditions d’utilisation</a> et la <a href="#" class="font-semibold text-brand-600 underline-offset-2 hover:underline">politique de confidentialité</a>.</span>
+            <span class="text-[13.5px] leading-snug text-ink-700">J’accepte les <a href="{{ route('legal.terms') }}" target="_blank" class="font-semibold text-brand-600 underline-offset-2 hover:underline">conditions d’utilisation</a> et la <a href="{{ route('legal.privacy') }}" target="_blank" class="font-semibold text-brand-600 underline-offset-2 hover:underline">politique de confidentialité</a>.</span>
         </label>
         <x-field-error name="terms" />
 

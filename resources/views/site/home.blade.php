@@ -117,7 +117,10 @@
                 <span class="eyebrow">Le parcours</span>
                 <h2 class="text-[clamp(2rem,5.5vw,3.2rem)] font-extrabold leading-[1.05] text-navy-950">Du départ au retour,<br>on ne vous lâche pas.</h2>
             </div>
-            <p data-reveal style="--reveal-delay: 120ms" class="max-w-md text-[16px] leading-relaxed text-ink-600">Trois temps, une seule équipe. Chaque étape de votre dossier est visible dans votre espace, sur le web comme sur l’application.</p>
+            <div data-reveal style="--reveal-delay: 120ms" class="flex max-w-md flex-col gap-3">
+                <p class="text-[16px] leading-relaxed text-ink-600">Trois temps, une seule équipe. Chaque étape de votre dossier est visible dans votre espace, sur le web comme sur l’application.</p>
+                <a href="{{ route('study') }}" class="inline-flex items-center gap-1.5 self-start text-[15px] font-bold text-brand-600 transition-all hover:gap-2.5">Le guide complet pour étudier en Chine <x-icon name="arrow" :size="17" /></a>
+            </div>
         </div>
 
         <div class="snap-row md:mx-6 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:p-0" data-reveal-stagger="120">
@@ -288,7 +291,10 @@
             <span class="eyebrow relative text-gold-300">Entreprises</span>
             <h2 class="relative text-[clamp(1.9rem,5vw,2.8rem)] font-extrabold leading-[1.05]">Recrutez des profils formés en Chine.</h2>
             <p class="relative max-w-xl text-base leading-relaxed text-white/70">Ingénieurs, techniciens, médecins, commerciaux : des diplômés vérifiés par Travel Express, qui parlent français et chinois. Idéal pour les entreprises burkinabè et les sociétés chinoises installées au pays.</p>
-            <a href="{{ route('register', ['profil' => 'recruiter']) }}" class="btn-gold shine relative mt-2 self-start">Créer un compte recruteur <x-icon name="arrow" :size="18" /></a>
+            <div class="relative mt-2 flex flex-col gap-3 min-[460px]:flex-row min-[460px]:flex-wrap">
+                <a href="{{ route('register', ['profil' => 'recruiter']) }}" class="btn-gold shine">Créer un compte recruteur <x-icon name="arrow" :size="18" /></a>
+                <a href="{{ route('companies') }}" class="btn-outline-light">En savoir plus</a>
+            </div>
         </div>
         <div class="flex flex-col gap-5" data-reveal-stagger="110">
             @foreach ([['search', 'Recherche ciblée', 'Filtrez par domaine, niveau de chinois, ville et disponibilité.'], ['chat', 'Offres dans la communauté', 'Publiez vos offres dans le thème Emplois du super groupe.'], ['shield', 'Profils vérifiés', 'Chaque diplôme est contrôlé par Travel Express avant publication.']] as [$icon, $t, $d])
@@ -306,16 +312,14 @@
             <div data-reveal class="flex flex-col gap-4 lg:sticky lg:top-28 lg:self-start">
                 <span class="eyebrow">FAQ</span>
                 <h2 class="text-[clamp(2rem,5.5vw,3rem)] font-extrabold leading-[1.05] text-navy-950">Questions fréquentes</h2>
-                <p class="text-[16px] leading-relaxed text-ink-600">Une autre question ? Créez votre compte et posez-la directement à un conseiller.</p>
-                <a href="{{ route('welcome') }}" class="btn-primary mt-2 self-start">Parler à un conseiller</a>
+                <p class="text-[16px] leading-relaxed text-ink-600">Les réponses aux questions qu’on nous pose le plus. Vous ne trouvez pas la vôtre ? Écrivez-nous.</p>
+                <div class="mt-2 flex flex-col gap-2.5 min-[460px]:flex-row lg:flex-col xl:flex-row">
+                    <a href="{{ route('faq') }}" class="btn-primary">Toutes les questions <x-icon name="arrow" :size="18" /></a>
+                    <a href="{{ route('contact') }}" class="btn-secondary">Poser ma question</a>
+                </div>
             </div>
             <div class="flex flex-col gap-3" data-reveal-stagger="80">
-                @foreach ([
-                    ['Faut-il parler chinois pour partir ?', 'Pas forcément. Certains programmes sont enseignés en anglais, d’autres commencent par une année de langue chinoise. Votre conseiller vous oriente selon votre profil.'],
-                    ['Combien de temps prend la procédure ?', 'Cela dépend de l’université et de la période de l’année. Votre conseiller vous donne un calendrier précis dès l’ouverture du dossier.'],
-                    ['Quels sont les frais d’accompagnement ?', '[À compléter par Travel Express : frais de dossier, frais d’accompagnement, modalités de paiement.]'],
-                    ['Je suis diplômé, comment rejoindre le vivier de talents ?', 'Créez un compte « Diplômé de retour », complétez votre profil et ajoutez votre diplôme. L’équipe Travel Express le vérifie avant de le publier.'],
-                ] as $i => [$q, $a])
+                @foreach ($faq as $i => [$q, $a])
                     <div data-reveal class="card overflow-hidden transition duration-300" :class="open === {{ $i }} && 'ring-brand-200 shadow-lift'">
                         <button type="button" @click="open = open === {{ $i }} ? -1 : {{ $i }}" :aria-expanded="open === {{ $i }}" class="flex min-h-[68px] w-full items-center justify-between gap-4 px-5 py-4 text-left font-display text-[16.5px] font-bold text-navy-950 sm:px-6 sm:text-[17px]">
                             {{ $q }}
@@ -342,12 +346,11 @@
             <div class="relative flex flex-wrap items-center justify-between gap-8">
                 <div class="flex max-w-xl flex-col gap-3">
                     <h2 class="text-[clamp(1.9rem,5vw,2.8rem)] font-extrabold leading-[1.05]">Votre dossier, toujours dans la poche.</h2>
-                    <p class="text-[16px] leading-relaxed text-white/80">L’application est disponible sur Android et iPhone, et s’installe aussi depuis le navigateur.</p>
+                    <p class="text-[16px] leading-relaxed text-white/80">Les applications Android et iPhone arrivent bientôt. En attendant, installez Back to Burkina sur votre téléphone directement depuis le navigateur.</p>
                 </div>
                 <div class="flex w-full flex-col gap-3 min-[460px]:w-auto min-[460px]:flex-row min-[460px]:flex-wrap" x-data="{ prompt: null }" @beforeinstallprompt.window.prevent="prompt = $event">
-                    <a href="#" class="btn-light"><x-icon name="phone" :size="18" /> Android</a>
-                    <a href="#" class="btn-light"><x-icon name="phone" :size="18" /> iPhone</a>
-                    <button type="button" x-show="prompt" x-cloak @click="prompt.prompt(); prompt = null" class="btn-outline-light">Installer depuis le navigateur</button>
+                    <button type="button" x-show="prompt" x-cloak @click="prompt.prompt(); prompt = null" class="btn-light"><x-icon name="phone" :size="18" /> Installer l’application</button>
+                    <span class="glass inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-[14px] font-semibold text-white/85"><x-icon name="clock" :size="17" /> Bientôt sur Android et iPhone</span>
                 </div>
             </div>
         </div>

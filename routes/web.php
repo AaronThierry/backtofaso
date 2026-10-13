@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\OnboardingController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DossierController;
 use App\Http\Controllers\GroupController;
@@ -14,6 +15,15 @@ use Illuminate\Support\Facades\Route;
 
 // ---------- Site public ----------
 Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('/etudier-en-chine', [PageController::class, 'study'])->name('study');
+Route::get('/entreprises', [PageController::class, 'companies'])->name('companies');
+Route::get('/questions-frequentes', [PageController::class, 'faq'])->name('faq');
+Route::get('/contact', [ContactController::class, 'create'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,10')->name('contact.store');
+Route::get('/mentions-legales', [PageController::class, 'legal'])->defaults('page', 'notice')->name('legal.notice');
+Route::get('/confidentialite', [PageController::class, 'legal'])->defaults('page', 'privacy')->name('legal.privacy');
+Route::get('/conditions-utilisation', [PageController::class, 'legal'])->defaults('page', 'terms')->name('legal.terms');
+Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
 Route::get('/hors-ligne', [PageController::class, 'offline'])->name('offline');
 
 // ---------- Invités : inscription et connexion ----------

@@ -86,6 +86,39 @@
         </div>
     </div>
 
+    {{-- Emblème Back to Faso --}}
+    <section class="relative overflow-hidden bg-white" aria-labelledby="embleme-titre">
+        <div class="pointer-events-none absolute -right-24 top-10 size-[380px] rounded-full bg-faso-green/[0.07] blur-3xl"></div>
+        <div class="pointer-events-none absolute -left-24 bottom-0 size-[320px] rounded-full bg-faso-red/[0.06] blur-3xl"></div>
+
+        <div class="relative mx-auto flex max-w-[1200px] flex-col items-center gap-12 px-4 py-16 sm:px-6 sm:py-24">
+            <div data-reveal="zoom" class="flex flex-col items-center gap-6 text-center sm:flex-row sm:gap-10 sm:text-left">
+                <img src="/images/brand/backtofaso-symbole.svg" alt="" width="200" height="200" class="size-36 shrink-0 scale-125 drop-shadow-[0_18px_30px_rgb(0_158_73/0.18)] sm:size-48 lg:size-56">
+                <div class="flex flex-col gap-3">
+                    <h2 id="embleme-titre" class="font-display text-[clamp(2.8rem,10vw,6.2rem)] font-extrabold leading-[0.95] tracking-[-0.04em] text-ink-900">Back to <span class="text-faso-green">Faso</span></h2>
+                    <p class="text-[clamp(1.15rem,3vw,1.9rem)] font-medium text-ink-600">Étudier ailleurs, réussir au pays</p>
+                    <span class="mx-auto mt-2 flex h-1.5 w-40 overflow-hidden rounded-full sm:mx-0" aria-hidden="true">
+                        <span class="flex-1 bg-faso-red"></span><span class="w-6 bg-faso-yellow"></span><span class="flex-1 bg-faso-green"></span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="grid w-full gap-4 sm:grid-cols-3" data-reveal-stagger="110">
+                @foreach ([
+                    ['bg-faso-red', 'Le B du drapeau', 'Rouge en haut, vert en bas : les deux couleurs du Burkina Faso tracent l’initiale du projet.'],
+                    ['bg-faso-yellow', 'L’étoile au cœur', 'L’étoile jaune du drapeau, au centre du B : la réussite de chaque étudiant, qui guide tout le parcours.'],
+                    ['bg-faso-green', 'La flèche du retour', 'Le B se termine en flèche qui revient : partir étudier, puis rentrer bâtir le Faso.'],
+                ] as [$color, $t, $d])
+                    <div data-reveal class="card card-hover flex flex-col gap-3 p-6">
+                        <span class="h-1.5 w-10 rounded-full {{ $color }}"></span>
+                        <span class="font-display text-[17px] font-bold text-navy-950">{{ $t }}</span>
+                        <span class="text-sm leading-relaxed text-ink-600">{{ $d }}</span>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
     {{-- Promesse --}}
     <section class="mx-auto max-w-[1200px] px-4 pt-16 sm:px-6 sm:pt-20">
         <div class="grid gap-4 sm:grid-cols-3" data-reveal-stagger="110">

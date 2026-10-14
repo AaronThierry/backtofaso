@@ -33,12 +33,8 @@ $contact = config('backtoburkina.contact');
             @keydown.escape.window="open = false"
             :class="[hidden ? '-translate-y-full' : 'translate-y-0', scrolled || open ? 'bg-white/90 shadow-[0_1px_0_rgb(16_24_40/0.06),0_10px_30px_-18px_rgb(16_24_40/0.25)] backdrop-blur-xl' : 'bg-white']">
         <div class="mx-auto flex max-w-[1200px] items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-3.5">
-            <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-2.5 sm:gap-3">
-                <x-logo :size="40" />
-                <span class="flex min-w-0 flex-col leading-tight">
-                    <span class="truncate font-display text-[17px] font-bold text-navy-950 sm:text-[19px]">Back to Burkina</span>
-                    <span class="hidden text-xs text-ink-500 min-[380px]:block">par Travel Express</span>
-                </span>
+            <a href="{{ route('home') }}" class="flex min-w-0 items-center" aria-label="Back to Faso, accueil">
+                <x-wordmark :size="42" caption="par Travel Express" />
             </a>
             <nav class="hidden items-center gap-1 text-[15px] font-semibold lg:flex" aria-label="Navigation du site">
                 @foreach ($links as $href => [$label, $name])
@@ -125,7 +121,7 @@ $contact = config('backtoburkina.contact');
 
         <div class="relative mx-auto grid max-w-[1200px] gap-10 px-4 py-14 text-sm sm:grid-cols-2 sm:px-6 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
             <div class="flex flex-col gap-4">
-                <a href="{{ route('home') }}" class="flex items-center gap-3"><x-logo :size="44" /><span class="font-display text-xl font-bold">Back to Burkina</span></a>
+                <a href="{{ route('home') }}" class="flex items-center" aria-label="Back to Faso, accueil"><x-wordmark :size="48" dark /></a>
                 <span class="max-w-xs leading-relaxed text-white/65">Un projet de Travel Express pour le retour des compétences au Burkina Faso. Étudier à l’étranger, revenir bâtir le Faso.</span>
             </div>
             <nav class="flex flex-col gap-3" aria-label="Étudiants">

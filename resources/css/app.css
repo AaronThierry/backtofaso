@@ -48,6 +48,11 @@
 
     --color-canvas: #F3F5F9;
 
+    /* Couleurs du drapeau, reprises du logo Back to Faso */
+    --color-faso-red: #EF2B2D;
+    --color-faso-green: #009E49;
+    --color-faso-yellow: #FCD116;
+
     --color-ok-50: #EEFBF1;
     --color-ok-500: #22A55A;
     --color-ok-700: #0B6834;

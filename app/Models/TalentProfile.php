@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Destinations;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -48,7 +49,7 @@ class TalentProfile extends Model
     /** Nom du pays où le diplôme a été obtenu */
     public function countryName(): ?string
     {
-        return AppSupportDestinations::name($this->study_country);
+        return Destinations::name($this->study_country);
     }
 
     public function availabilityLabel(): string

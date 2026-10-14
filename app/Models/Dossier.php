@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Destinations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -62,7 +63,7 @@ class Dossier extends Model
     /** Nom du pays de destination (« Chine », « Canada »…) */
     public function countryName(): ?string
     {
-        return AppSupportDestinations::name($this->country);
+        return Destinations::name($this->country);
     }
 
     public function stepLabel(): string

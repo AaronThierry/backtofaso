@@ -10,7 +10,7 @@
                     <div class="bg-hero relative h-24">
                         <div class="bg-weave absolute inset-0 opacity-60"></div>
                     </div>
-                    <div class="-mt-12 flex flex-col items-center gap-3 px-5 pb-6 text-center">
+                    <div class="relative -mt-12 flex flex-col items-center gap-3 px-5 pb-6 text-center">
                         <x-avatar :user="$user" :size="96" tone="gold" class="ring-4 ring-white shadow-lg" />
                         <div class="flex flex-col items-center gap-1.5">
                             <span class="font-display text-[22px] font-bold leading-tight text-navy-950">{{ $user->name }}</span>

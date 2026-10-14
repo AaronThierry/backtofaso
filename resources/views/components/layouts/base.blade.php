@@ -24,6 +24,7 @@ $fullTitle = ($title ? $title.' · ' : '').'Back to Burkina';
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset('icons/icon-512.png') }}">
     <meta name="twitter:card" content="summary">
+    <meta property="og:image:alt" content="Logo Back to Faso">
 
     {{-- PWA --}}
     <link rel="manifest" href="/manifest.webmanifest">
@@ -33,7 +34,8 @@ $fullTitle = ($title ? $title.' · ' : '').'Back to Burkina';
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Back to BF">
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" href="/icons/icon-192.png">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

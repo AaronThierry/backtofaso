@@ -2,7 +2,7 @@
  * - pages : réseau d'abord, repli sur la page « hors ligne »
  * - assets (/build, /icons, polices) : cache d'abord
  */
-const VERSION = 'btb-v1';
+const VERSION = 'btb-v2';
 const STATIC_CACHE = `${VERSION}-static`;
 const OFFLINE_URL = '/hors-ligne';
 

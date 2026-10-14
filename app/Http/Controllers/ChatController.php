@@ -76,6 +76,7 @@ class ChatController extends Controller
                 : $conversation->users->sortBy(fn ($u) => [$u->pivot->role === 'admin' ? 0 : 1, $u->first_name])->values(),
             'seenUntil' => $conversation->seenUntilFor($user),
             'hasMore' => $messages->count() === 50,
+            'canManage' => $conversation->type === Conversation::GROUP && $conversation->isAdmin($user),
         ]);
     }
 

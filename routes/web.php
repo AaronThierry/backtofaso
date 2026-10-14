@@ -80,6 +80,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/groupes', [GroupController::class, 'store'])->name('groups.store');
         Route::post('/groupes/{conversation}/rejoindre', [GroupController::class, 'join'])->name('groups.join');
         Route::post('/groupes/{conversation}/quitter', [GroupController::class, 'leave'])->name('groups.leave');
+        Route::post('/groupes/{conversation}/membres', [GroupController::class, 'addMembers'])->name('groups.members.add');
+        Route::delete('/groupes/{conversation}/membres/{user}', [GroupController::class, 'removeMember'])->name('groups.members.remove');
 
         Route::get('/compte', [AccountController::class, 'show'])->name('account');
         Route::put('/compte/informations', [AccountController::class, 'updateProfile'])->name('account.profile');

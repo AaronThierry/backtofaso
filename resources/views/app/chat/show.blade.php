@@ -3,9 +3,9 @@
     $isDirect = $conversation->type === \App\Models\Conversation::DIRECT;
     $other = $isDirect ? $conversation->users->firstWhere('id', '!=', $user->id) : null;
     $subtitle = match (true) {
-        $conversation->isSuper() => 'Super groupe · '.$membersCount.' membres',
+        $conversation->isSuper() => 'Super groupe · '.$membersCount.' membre'.($membersCount > 1 ? 's' : ''),
         $isDirect => $other?->role_label ?? 'Conversation privée',
-        default => 'Groupe '.($conversation->is_public ? 'public' : 'privé').' · '.$membersCount.' membres',
+        default => 'Groupe '.($conversation->is_public ? 'public' : 'privé').' · '.$membersCount.' membre'.($membersCount > 1 ? 's' : ''),
     };
 @endphp
 <x-layouts.app :title="$conversation->displayNameFor($user)" active="chat" :bare="true">
@@ -198,6 +198,14 @@
                 </div>
             @endif
 
+            {{-- Confirmation (ajout de membres, etc.) --}}
+            @if (session('status'))
+                <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" x-transition
+                     class="absolute left-1/2 top-24 z-20 flex -translate-x-1/2 items-center gap-2.5 rounded-full bg-navy-900 py-2.5 pl-3 pr-4 text-[13.5px] font-semibold text-white shadow-lift">
+                    <span class="flex size-5 items-center justify-center rounded-full bg-ok-500"><x-icon name="check" :size="12" stroke-width="3" /></span> {{ session('status') }}
+                </div>
+            @endif
+
             {{-- Dépôt de fichier --}}
             <div x-show="dragging" x-cloak x-transition.opacity class="pointer-events-none absolute inset-3 z-20 flex flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-brand-400 bg-brand-50/90 text-brand-700 backdrop-blur-sm">
                 <x-icon name="upload" :size="34" />
@@ -262,10 +270,47 @@
                                     @endforeach
                                 </div>
                             @else
+                                {{-- Inviter des membres --}}
+                                @if ($canManage)
+                                    <div x-data="groupInvite(@js(route('chat.members')), @js($members->pluck('id')->values()))" class="flex flex-col gap-2">
+                                        <button type="button" x-show="!open" @click="start()" class="btn-primary min-h-11 text-sm"><x-icon name="plus" :size="18" stroke-width="2.4" /> Ajouter des membres</button>
+                                        <form x-show="open" x-cloak method="POST" action="{{ route('groups.members.add', $conversation) }}" class="flex flex-col gap-3 rounded-2xl bg-ink-50 p-3 ring-1 ring-ink-100">
+                                            @csrf
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-sm font-bold text-navy-950">Ajouter des membres</span>
+                                                <button type="button" @click="open = false" class="text-xs font-semibold text-ink-500 hover:text-ink-900">Annuler</button>
+                                            </div>
+                                            <label class="field-group min-h-10 bg-white">
+                                                <x-icon name="search" :size="16" class="ml-3 text-ink-400" />
+                                                <span class="sr-only">Rechercher un membre</span>
+                                                <input x-ref="search" x-model="term" @input.debounce.250ms="search()" type="search" placeholder="Nom d’un membre…" class="min-w-0 flex-1 bg-transparent px-2.5 text-sm outline-none placeholder:text-ink-400">
+                                            </label>
+                                            <div class="flex max-h-60 flex-col gap-0.5 overflow-y-auto">
+                                                <template x-if="loading"><p class="px-2 py-3 text-center text-xs text-ink-500">Recherche…</p></template>
+                                                <template x-if="!loading && available.length === 0"><p class="px-2 py-3 text-center text-xs text-ink-500">Aucune personne à ajouter.</p></template>
+                                                <template x-for="p in available" :key="p.id">
+                                                    <label class="flex cursor-pointer items-center gap-3 rounded-xl px-2 py-2 transition" :class="picked.includes(p.id) ? 'bg-brand-50' : 'hover:bg-white'">
+                                                        <template x-if="p.avatar"><img :src="p.avatar" alt="" class="size-9 rounded-full object-cover"></template>
+                                                        <template x-if="!p.avatar"><span class="flex size-9 items-center justify-center rounded-full bg-linear-to-br from-brand-100 to-brand-200 text-[11px] font-bold text-brand-800" x-text="p.initials"></span></template>
+                                                        <span class="flex min-w-0 flex-1 flex-col"><span class="truncate text-[13.5px] font-bold text-navy-950" x-text="p.name"></span><span class="truncate text-[11.5px] text-ink-500" x-text="p.role"></span></span>
+                                                        <input type="checkbox" name="members[]" :value="p.id" x-model.number="picked" class="peer sr-only">
+                                                        <span class="flex size-5 shrink-0 items-center justify-center rounded-full ring-2 transition" :class="picked.includes(p.id) ? 'bg-brand-600 text-white ring-brand-600' : 'text-transparent ring-ink-300'"><x-icon name="check" :size="11" stroke-width="3.4" /></span>
+                                                    </label>
+                                                </template>
+                                            </div>
+                                            {{-- Personnes cochées mais masquées par une nouvelle recherche : toujours envoyées --}}
+                                            <template x-for="id in picked.filter(id => !available.some(p => p.id === id))" :key="'h' + id">
+                                                <input type="hidden" name="members[]" :value="id">
+                                            </template>
+                                            <button class="btn-primary min-h-10 text-sm" :disabled="!picked.length" x-text="picked.length ? 'Ajouter ' + picked.length + ' personne' + (picked.length > 1 ? 's' : '') : 'Choisissez des personnes'"></button>
+                                        </form>
+                                    </div>
+                                @endif
+
                                 <div class="flex flex-col gap-2">
                                     <span class="flex items-center justify-between text-xs font-bold uppercase tracking-[0.14em] text-ink-500">Membres <span class="normal-case tracking-normal">{{ $members->count() }}</span></span>
                                     @foreach ($members as $member)
-                                        <div class="flex items-center gap-3 rounded-xl px-1.5 py-2">
+                                        <div class="group/member flex items-center gap-3 rounded-xl px-1.5 py-2">
                                             <x-avatar :user="$member" :size="40" />
                                             <span class="flex min-w-0 flex-1 flex-col">
                                                 <span class="truncate text-sm font-bold text-navy-950">{{ $member->name }}{{ $member->id === $user->id ? ' (vous)' : '' }}</span>
@@ -273,10 +318,16 @@
                                             </span>
                                             @if ($member->pivot->role === 'admin')
                                                 <span class="rounded-full bg-gold-50 px-2 py-0.5 text-[11px] font-bold text-gold-700 ring-1 ring-gold-200">Admin</span>
-                                            @elseif ($member->id !== $user->id)
+                                            @endif
+                                            @if ($member->id !== $user->id)
                                                 <form method="POST" action="{{ route('chat.direct', $member) }}">@csrf
                                                     <button class="flex size-8 items-center justify-center rounded-lg text-ink-400 hover:bg-brand-50 hover:text-brand-600" aria-label="Écrire à {{ $member->first_name }}" title="Écrire en privé"><x-icon name="chat" :size="16" /></button>
                                                 </form>
+                                                @if ($canManage)
+                                                    <form method="POST" action="{{ route('groups.members.remove', [$conversation, $member]) }}" onsubmit="return confirm(@js('Retirer '.$member->first_name.' du groupe ?'))">@csrf @method('DELETE')
+                                                        <button class="flex size-8 items-center justify-center rounded-lg text-ink-400 hover:bg-err-50 hover:text-err-700" aria-label="Retirer {{ $member->first_name }} du groupe" title="Retirer du groupe"><x-icon name="close" :size="16" /></button>
+                                                    </form>
+                                                @endif
                                             @endif
                                         </div>
                                     @endforeach

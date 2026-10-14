@@ -96,6 +96,27 @@ class ChatTest extends TestCase
             ->assertJsonMissing(['id' => $awa->id]);
     }
 
+    public function test_group_admin_can_invite_and_remove_members(): void
+    {
+        [$admin, $awa, $issouf] = [$this->member(['first_name' => 'Thierry']), $this->member(['first_name' => 'Awa']), $this->member(['first_name' => 'Issouf'])];
+        $group = Conversation::create(['type' => Conversation::GROUP, 'name' => 'Bobo', 'is_public' => false, 'created_by' => $admin->id]);
+        $group->users()->attach($admin->id, ['role' => 'admin']);
+
+        $this->actingAs($admin)->post(route('groups.members.add', $group), ['members' => [$awa->id, $issouf->id]])
+            ->assertRedirect(route('chat.show', $group))->assertSessionHas('status');
+
+        $this->assertTrue($group->hasMember($awa));
+        $this->assertTrue($group->hasMember($issouf));
+        $this->assertDatabaseHas('messages', ['conversation_id' => $group->id, 'body' => 'Thierry a ajouté Awa et Issouf au groupe.']);
+
+        // Un simple membre ne peut ni inviter ni retirer
+        $this->actingAs($awa)->post(route('groups.members.add', $group), ['members' => [$admin->id]])->assertForbidden();
+        $this->actingAs($awa)->delete(route('groups.members.remove', [$group, $issouf]))->assertForbidden();
+
+        $this->actingAs($admin)->delete(route('groups.members.remove', [$group, $issouf]))->assertRedirect();
+        $this->assertFalse($group->hasMember($issouf));
+    }
+
     public function test_member_can_leave_a_group(): void
     {
         $awa = $this->member();

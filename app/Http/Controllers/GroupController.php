@@ -50,6 +50,47 @@ class GroupController extends Controller
         return redirect()->route('chat.show', $group);
     }
 
+    /** Inviter des membres dans un groupe (administrateurs du groupe et équipe Travel Express) */
+    public function addMembers(Request $request, Conversation $conversation): RedirectResponse
+    {
+        $me = $request->user();
+        abort_unless($conversation->type === Conversation::GROUP && $conversation->isAdmin($me), 403);
+
+        $data = $request->validate([
+            'members' => ['required', 'array', 'max:50'],
+            'members.*' => ['integer', 'exists:users,id'],
+        ], ['members.required' => 'Choisissez au moins une personne à ajouter.']);
+
+        $current = $conversation->users()->pluck('users.id');
+        $new = User::whereIn('id', $data['members'])->whereNotIn('id', $current)->get();
+
+        if ($new->isEmpty()) {
+            return redirect()->route('chat.show', $conversation)->with('status', 'Ces personnes font déjà partie du groupe.');
+        }
+
+        $conversation->users()->attach($new->mapWithKeys(fn ($u) => [$u->id => ['role' => 'member']])->all());
+
+        $names = $new->pluck('first_name');
+        $list = $names->count() > 1 ? $names->slice(0, -1)->join(', ').' et '.$names->last() : $names->first();
+        $conversation->messages()->create(['user_id' => $me->id, 'body' => $me->first_name.' a ajouté '.$list.' au groupe.']);
+
+        return redirect()->route('chat.show', $conversation)
+            ->with('status', $new->count() > 1 ? $new->count().' personnes ont été ajoutées au groupe.' : $list.' a été ajouté(e) au groupe.');
+    }
+
+    /** Retirer un membre d'un groupe (administrateurs du groupe et équipe Travel Express) */
+    public function removeMember(Request $request, Conversation $conversation, User $user): RedirectResponse
+    {
+        $me = $request->user();
+        abort_unless($conversation->type === Conversation::GROUP && $conversation->isAdmin($me), 403);
+        abort_if($user->id === $me->id, 422, 'Pour partir du groupe, utilisez « Quitter le groupe ».');
+
+        $conversation->users()->detach($user->id);
+        $conversation->messages()->create(['user_id' => $me->id, 'body' => $me->first_name.' a retiré '.$user->first_name.' du groupe.']);
+
+        return redirect()->route('chat.show', $conversation)->with('status', $user->first_name.' a été retiré(e) du groupe.');
+    }
+
     public function leave(Request $request, Conversation $conversation): RedirectResponse
     {
         $me = $request->user();

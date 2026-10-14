@@ -112,6 +112,24 @@
 
             {{-- Informations --}}
             <aside class="flex flex-col gap-4 lg:sticky lg:top-10">
+                @if ($mine)
+                    @php($completion = $profile->completion())
+                    @if ($completion['percent'] < 100)
+                        <section class="card flex flex-col gap-3 p-5">
+                            <div class="flex items-baseline justify-between">
+                                <span class="font-display text-[16px] font-bold text-navy-950">Votre profil</span>
+                                <span class="text-sm font-bold text-brand-600">{{ $completion['percent'] }} %</span>
+                            </div>
+                            <span class="block h-2 overflow-hidden rounded-full bg-ink-100"><span class="block h-full rounded-full bg-linear-to-r from-brand-500 to-gold-400" style="width: {{ $completion['percent'] }}%"></span></span>
+                            <ul class="flex flex-col gap-1.5 pt-1">
+                                @foreach (collect($completion['items'])->where('done', false) as $item)
+                                    <li class="flex items-start gap-2.5 text-[13.5px]"><span class="mt-0.5 size-4 shrink-0 rounded-full ring-2 ring-ink-200"></span><span><b class="font-semibold text-navy-950">{{ $item['label'] }}</b> <span class="text-ink-500">· {{ $item['hint'] }}</span></span></li>
+                                @endforeach
+                            </ul>
+                            <a href="{{ route('talents.edit') }}" class="btn-primary mt-1 min-h-11 text-sm">Compléter mon profil</a>
+                        </section>
+                    @endif
+                @endif
                 <section class="card flex flex-col p-2">
                     @foreach ([
                         ['briefcase', 'Domaine', $profile->field],

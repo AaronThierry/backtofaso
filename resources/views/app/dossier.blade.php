@@ -82,6 +82,25 @@
                         </li>
                     @endforeach
                 </ol>
+
+                {{-- Conseiller --}}
+                @if ($dossier->advisor)
+                    <div class="card flex items-center gap-4 p-4">
+                        <x-avatar :user="$dossier->advisor" :size="52" tone="gold" />
+                        <span class="flex min-w-0 flex-1 flex-col">
+                            <span class="text-xs font-bold uppercase tracking-[0.12em] text-ink-500">Votre conseiller</span>
+                            <span class="truncate font-display text-[17px] font-bold text-navy-950">{{ $dossier->advisor->name }}</span>
+                        </span>
+                        <form method="POST" action="{{ route('chat.direct', $dossier->advisor) }}">@csrf
+                            <button class="icon-btn bg-brand-600 text-white ring-0 hover:bg-brand-700 hover:text-white" aria-label="Écrire à mon conseiller"><x-icon name="chat" :size="18" /></button>
+                        </form>
+                    </div>
+                @else
+                    <div class="flex items-start gap-3 rounded-2xl bg-brand-50 p-4 text-[13.5px] leading-relaxed text-brand-800 ring-1 ring-brand-100">
+                        <x-icon name="user" :size="18" class="mt-0.5 shrink-0" />
+                        <span>Un conseiller Travel Express va être attribué à votre dossier. En attendant, posez vos questions dans le thème <a href="{{ route('chat.show', [\App\Models\Conversation::superGroup(), 'theme' => 'entraide']) }}" class="font-bold underline-offset-2 hover:underline">Entraide</a>.</span>
+                    </div>
+                @endif
             </section>
 
             {{-- Documents --}}
@@ -90,6 +109,12 @@
                     <h2 class="text-[20px] font-bold text-navy-950">Documents</h2>
                     <span class="text-[13px] font-semibold text-ink-500">{{ $counts['validated'] }} sur {{ $docs->count() }} validés</span>
                 </div>
+                @if ($counts['todo'])
+                    <div class="flex items-start gap-3 rounded-2xl bg-warn-50 p-4 text-[13.5px] leading-relaxed text-warn-700 ring-1 ring-warn-700/15">
+                        <x-icon name="upload" :size="18" class="mt-0.5 shrink-0" />
+                        <span><b>{{ $counts['todo'] }} document(s) à fournir.</b> Ajoutez-les ci-dessous : une photo nette prise avec votre téléphone suffit souvent.</span>
+                    </div>
+                @endif
                 <div class="card divide-y divide-ink-100 overflow-hidden">
                     @forelse ($docs as $doc)
                         <div class="flex flex-col gap-2 px-4 py-4 transition hover:bg-ink-50/50 sm:px-5" x-data="{ uploading: false }">

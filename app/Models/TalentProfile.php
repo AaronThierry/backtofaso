@@ -55,6 +55,31 @@ class TalentProfile extends Model
         return $this->headline && $this->headline !== self::DEFAULT_HEADLINE ? $this->headline : null;
     }
 
+    /**
+     * Points à remplir pour un profil attractif.
+     * @return array{percent: int, items: array<int, array{label: string, hint: string, done: bool}>}
+     */
+    public function completion(): array
+    {
+        $items = [
+            ['Photo de profil', 'Les recruteurs regardent d’abord la photo', (bool) $this->user?->avatar_path],
+            ['Titre professionnel', 'Ex. « Ingénieure en génie logiciel »', (bool) $this->customHeadline()],
+            ['Pays et école', 'Où vous avez obtenu votre diplôme', $this->study_country && $this->school],
+            ['Compétences', 'Au moins trois compétences', count($this->skills ?? []) >= 3],
+            ['Langues', 'Les langues que vous parlez', (bool) $this->languages],
+            ['Présentation', 'Quelques lignes sur votre parcours', mb_strlen((string) $this->bio) >= 60],
+            ['CV', 'Au format PDF', (bool) $this->cv_path],
+            ['Visible des recruteurs', 'Activez la visibilité du profil', (bool) $this->is_public],
+        ];
+
+        $done = count(array_filter($items, fn ($i) => $i[2]));
+
+        return [
+            'percent' => (int) round($done / count($items) * 100),
+            'items' => array_map(fn ($i) => ['label' => $i[0], 'hint' => $i[1], 'done' => (bool) $i[2]], $items),
+        ];
+    }
+
     /** Nom du pays où le diplôme a été obtenu */
     public function countryName(): ?string
     {

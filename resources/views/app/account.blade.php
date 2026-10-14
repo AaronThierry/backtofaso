@@ -59,6 +59,49 @@
                     </div>
                 </section>
 
+                @if ($user->talentProfile)
+                    @php($completion = $user->talentProfile->completion())
+                    <section class="flex flex-col gap-3.5">
+                        <div class="flex items-baseline justify-between">
+                            <h2 class="text-[20px] font-bold text-navy-950">Profil talent</h2>
+                            <span class="text-sm font-bold text-navy-950">{{ $completion['percent'] }} % complété</span>
+                        </div>
+                        <a href="{{ route('talents.edit') }}" class="card card-hover group flex flex-col gap-4 p-5">
+                            <span class="block h-2 overflow-hidden rounded-full bg-ink-100"><span class="block h-full rounded-full bg-linear-to-r from-brand-500 to-gold-400" style="width: {{ $completion['percent'] }}%"></span></span>
+                            <span class="flex flex-wrap gap-2">
+                                @foreach ($completion['items'] as $item)
+                                    <span @class(['inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold', 'bg-ok-50 text-ok-700' => $item['done'], 'bg-ink-50 text-ink-600 ring-1 ring-ink-200' => ! $item['done']])>
+                                        <x-icon :name="$item['done'] ? 'check' : 'plus'" :size="12" stroke-width="2.6" /> {{ $item['label'] }}
+                                    </span>
+                                @endforeach
+                            </span>
+                            <span class="flex items-center justify-between text-[13.5px]">
+                                <span class="text-ink-600">{{ $user->talentProfile->verified_at ? 'Profil vérifié par Travel Express' : 'En attente de vérification par Travel Express' }}</span>
+                                <span class="inline-flex items-center gap-1 font-bold text-brand-600">Compléter <x-icon name="arrow" :size="15" class="transition group-hover:translate-x-0.5" /></span>
+                            </span>
+                        </a>
+                    </section>
+                @endif
+
+                <section class="flex flex-col gap-3.5">
+                    <h2 class="text-[20px] font-bold text-navy-950">Sécurité</h2>
+                    <div class="card flex flex-col divide-y divide-ink-100">
+                        @foreach ([
+                            ['mail', 'Adresse e-mail', $user->email_verified_at ? 'Vérifiée le '.$user->email_verified_at->translatedFormat('j F Y') : 'Sera vérifiée à votre prochaine connexion', (bool) $user->email_verified_at],
+                            ['shield', 'Code de connexion', 'Un code vous est envoyé par e-mail à chaque connexion', true],
+                            ['calendar', 'Membre depuis', ucfirst($user->created_at->translatedFormat('F Y')), true],
+                        ] as [$icon, $label, $value, $ok])
+                            <div class="flex items-center gap-4 px-5 py-4">
+                                <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-ink-50 text-ink-600"><x-icon :name="$icon" :size="18" /></span>
+                                <span class="flex min-w-0 flex-1 flex-col"><span class="text-[14.5px] font-semibold text-navy-950">{{ $label }}</span><span class="text-[13px] text-ink-600">{{ $value }}</span></span>
+                                @if ($icon !== 'calendar')
+                                    <span class="{{ $ok ? 'badge-ok' : 'badge-warn' }}">{{ $ok ? 'Actif' : 'À faire' }}</span>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+
                 <section class="bg-hero relative flex flex-col gap-4 overflow-hidden rounded-2xl p-6 text-white sm:flex-row sm:items-center">
                     <div class="bg-weave pointer-events-none absolute inset-y-0 right-0 w-1/3 opacity-50 [mask-image:linear-gradient(to_left,black,transparent)]"></div>
                     <span class="glass relative flex size-12 shrink-0 items-center justify-center rounded-2xl text-gold-300"><x-icon name="help" :size="24" /></span>

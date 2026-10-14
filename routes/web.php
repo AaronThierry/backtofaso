@@ -69,14 +69,17 @@ Route::middleware('auth')->group(function () {
         Route::put('/mon-profil-talent', [TalentController::class, 'update'])->name('talents.update');
 
         Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+        Route::get('/chat/membres', [ChatController::class, 'members'])->name('chat.members');
         Route::get('/chat/{conversation}', [ChatController::class, 'show'])->name('chat.show');
         Route::get('/chat/{conversation}/messages', [ChatController::class, 'messages'])->name('chat.messages');
         Route::post('/chat/{conversation}/messages', [ChatController::class, 'store'])->middleware('throttle:30,1')->name('chat.store');
+        Route::delete('/chat/{conversation}/messages/{message}', [ChatController::class, 'destroy'])->name('chat.destroy');
         Route::post('/chat/direct/{user}', [ChatController::class, 'direct'])->name('chat.direct');
 
         Route::get('/groupes/nouveau', [GroupController::class, 'create'])->name('groups.create');
         Route::post('/groupes', [GroupController::class, 'store'])->name('groups.store');
         Route::post('/groupes/{conversation}/rejoindre', [GroupController::class, 'join'])->name('groups.join');
+        Route::post('/groupes/{conversation}/quitter', [GroupController::class, 'leave'])->name('groups.leave');
 
         Route::get('/compte', [AccountController::class, 'show'])->name('account');
     });

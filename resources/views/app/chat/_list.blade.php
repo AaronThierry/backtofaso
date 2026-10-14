@@ -1,9 +1,48 @@
 {{-- Liste des conversations. Variables : $user, $filter, $super, $groups, $directs, $publicGroups, $activeId (conversation ouverte ou null) --}}
-<div class="flex flex-col gap-4" x-data="{ q: '' }">
+<div class="flex flex-col gap-4" x-data="newConversation(@js(route('chat.members')))">
     <div class="flex items-center justify-between gap-3">
         <h1 class="text-[26px] font-bold text-navy-950 lg:text-[28px]">Messages</h1>
-        <a href="{{ route('groups.create') }}" class="btn-primary min-h-10 rounded-full px-3.5 text-sm" title="Nouveau groupe"><x-icon name="plus" :size="18" stroke-width="2.4" /> Groupe</a>
+        <div class="flex items-center gap-2">
+            <button type="button" @click="open()" class="icon-btn size-10" aria-label="Nouveau message" title="Nouveau message"><x-icon name="edit" :size="18" /></button>
+            <a href="{{ route('groups.create') }}" class="btn-primary min-h-10 rounded-full px-3.5 text-sm" title="Nouveau groupe"><x-icon name="plus" :size="18" stroke-width="2.4" /> Groupe</a>
+        </div>
     </div>
+
+    {{-- Nouveau message : choisir un membre --}}
+    <template x-teleport="body">
+        <div x-show="show" x-cloak @keydown.escape.window="show = false" class="fixed inset-0 z-[60] flex items-end justify-center p-0 sm:items-center sm:p-5">
+            <div x-show="show" x-transition.opacity @click="show = false" class="absolute inset-0 bg-navy-950/45 backdrop-blur-[2px]"></div>
+            <div x-show="show" x-transition:enter="transition duration-300 ease-out" x-transition:enter-start="translate-y-6 opacity-0" x-transition:enter-end="translate-y-0 opacity-100"
+                 class="relative flex max-h-[85dvh] w-full max-w-md flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl sm:rounded-3xl" role="dialog" aria-label="Nouveau message">
+                <div class="flex items-center justify-between gap-3 border-b border-ink-100 px-5 py-4">
+                    <span class="font-display text-lg font-bold text-navy-950">Nouveau message</span>
+                    <button type="button" @click="show = false" class="flex size-9 items-center justify-center rounded-full text-ink-500 hover:bg-ink-50" aria-label="Fermer"><x-icon name="close" :size="18" /></button>
+                </div>
+                <div class="p-4 pb-2">
+                    <label class="field-group min-h-11 bg-ink-50/70">
+                        <x-icon name="search" :size="18" class="ml-3.5 text-ink-400" />
+                        <span class="sr-only">Rechercher un membre</span>
+                        <input x-ref="search" x-model="term" @input.debounce.250ms="search()" type="search" placeholder="Nom d’un membre…" class="min-w-0 flex-1 bg-transparent px-2.5 text-sm outline-none placeholder:text-ink-400">
+                    </label>
+                </div>
+                <div class="scrollbar-thin flex-1 overflow-y-auto px-2 pb-3">
+                    <template x-if="loading"><p class="px-3 py-6 text-center text-sm text-ink-500">Recherche…</p></template>
+                    <template x-if="!loading && results.length === 0"><p class="px-3 py-6 text-center text-sm text-ink-500">Aucun membre trouvé.</p></template>
+                    <template x-for="p in results" :key="p.id">
+                        <form method="POST" :action="p.url">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <button class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-ink-50">
+                                <template x-if="p.avatar"><img :src="p.avatar" alt="" class="size-10 rounded-full object-cover"></template>
+                                <template x-if="!p.avatar"><span class="flex size-10 items-center justify-center rounded-full bg-linear-to-br from-brand-100 to-brand-200 text-xs font-bold text-brand-800" x-text="p.initials"></span></template>
+                                <span class="flex min-w-0 flex-1 flex-col"><span class="truncate text-sm font-bold text-navy-950" x-text="p.name"></span><span class="truncate text-xs text-ink-500" x-text="p.role"></span></span>
+                                <x-icon name="chevron" :size="16" class="text-ink-300" />
+                            </button>
+                        </form>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </template>
 
     <label class="field-group min-h-11 bg-ink-50/70">
         <x-icon name="search" :size="18" class="ml-3.5 text-ink-400" />

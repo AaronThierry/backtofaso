@@ -1,8 +1,10 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 import { initMotion } from './motion';
+import { registerChat } from './chat';
 
 window.Alpine = Alpine;
+registerChat(Alpine);
 Alpine.start();
 
 initMotion();

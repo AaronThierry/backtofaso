@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class Conversation extends Model
 {
@@ -110,6 +112,23 @@ class Conversation extends Model
         $words = preg_split('/\s+/', trim($this->displayNameFor($viewer)));
 
         return mb_strtoupper(mb_substr($words[0] ?? '', 0, 1).mb_substr($words[1] ?? '', 0, 1));
+    }
+
+    public function avatarUrl(): ?string
+    {
+        return $this->avatar_path ? Storage::disk('public')->url($this->avatar_path) : null;
+    }
+
+    /** Conversation privée : jusqu'à quand l'autre personne a lu (pour afficher « Vu ») */
+    public function seenUntilFor(User $viewer): ?int
+    {
+        if ($this->type !== self::DIRECT) {
+            return null;
+        }
+
+        $other = $this->users()->whereKeyNot($viewer->id)->first();
+
+        return $other?->pivot?->last_read_at ? Carbon::parse($other->pivot->last_read_at)->getTimestamp() : null;
     }
 
     public function unreadCountFor(User $user): int

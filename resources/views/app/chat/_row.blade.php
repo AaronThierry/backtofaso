@@ -7,7 +7,14 @@
         <span class="absolute -left-px top-1/2 h-7 w-1 -translate-y-1/2 rounded-r-full bg-brand-600"></span>
     @endif
     <span class="relative">
-        <x-avatar :initials="$conversation->initials($user)" :size="46" :tone="$conversation->type === 'direct' ? 'brand' : 'ink'" :square="$conversation->type !== 'direct'" />
+        @php($other = $conversation->type === 'direct' ? $conversation->users->firstWhere('id', '!=', $user->id) : null)
+        @if ($other)
+            <x-avatar :user="$other" :size="46" />
+        @elseif ($conversation->avatarUrl())
+            <img src="{{ $conversation->avatarUrl() }}" alt="" class="size-[46px] rounded-[30%] object-cover ring-1 ring-ink-900/5">
+        @else
+            <x-avatar :initials="$conversation->initials($user)" :size="46" :tone="$conversation->type === 'direct' ? 'brand' : 'ink'" :square="$conversation->type !== 'direct'" />
+        @endif
         @if ($unread)
             <span class="absolute -right-0.5 -top-0.5 size-3 rounded-full bg-brand-600 ring-2 ring-white"></span>
         @endif
@@ -20,7 +27,7 @@
         <span class="flex items-center gap-2">
             <span @class(['truncate text-[13px]', 'font-semibold text-ink-800' => $unread, 'text-ink-500' => ! $unread])>
                 @if ($last)
-                    {{ $last->user_id === $user->id ? 'Vous' : $last->user->first_name }} : {{ $last->attachment_name ? '📎 '.$last->attachment_name : $last->body }}
+                    {{ $last->user_id === $user->id ? 'Vous' : $last->user->first_name }} : {{ $last->attachment_name ? ($last->isImage() ? 'Photo' : 'Fichier : '.$last->attachment_name) : $last->body }}
                 @else
                     Aucun message
                 @endif

@@ -50,6 +50,17 @@ class GroupController extends Controller
         return redirect()->route('chat.show', $group);
     }
 
+    public function leave(Request $request, Conversation $conversation): RedirectResponse
+    {
+        $me = $request->user();
+        abort_unless($conversation->type === Conversation::GROUP && $conversation->hasMember($me), 403);
+
+        $conversation->users()->detach($me->id);
+        $conversation->messages()->create(['user_id' => $me->id, 'body' => $me->first_name.' a quitté le groupe.']);
+
+        return redirect()->route('chat.index')->with('status', 'Vous avez quitté le groupe « '.$conversation->name.' ».');
+    }
+
     public function join(Request $request, Conversation $conversation): RedirectResponse
     {
         abort_unless($conversation->type === Conversation::GROUP && $conversation->is_public, 403);

@@ -13,10 +13,23 @@
             </div>
             <div class="flex flex-col gap-5 px-5 pb-6 sm:px-8 lg:flex-row lg:items-end lg:justify-between">
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-end">
-                    <span class="relative -mt-12 self-start sm:-mt-14">
-                        <x-avatar :user="$profile->user" :size="112" class="ring-4 ring-white shadow-lg" />
+                    <span class="relative -mt-16 self-start sm:-mt-20" x-data="{ zoom: false }" @keydown.escape.window="zoom = false">
+                        @if ($profile->user->avatar_url)
+                            <button type="button" @click="zoom = true" class="group block rounded-[30%] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-200" aria-label="Agrandir la photo">
+                                <x-avatar :user="$profile->user" :size="140" square class="ring-4 ring-white shadow-lift transition duration-300 group-hover:scale-[1.03]" />
+                            </button>
+                            {{-- Photo en grand --}}
+                            <template x-teleport="body">
+                                <div x-show="zoom" x-cloak x-transition.opacity @click="zoom = false" class="fixed inset-0 z-[70] flex items-center justify-center bg-navy-950/85 p-5 backdrop-blur-sm">
+                                    <img src="{{ $profile->user->avatar_url }}" alt="Photo de {{ $profile->user->name }}" class="max-h-[85dvh] max-w-full rounded-3xl object-contain shadow-2xl" x-show="zoom" x-transition.scale.90>
+                                    <button type="button" class="absolute right-5 top-5 flex size-11 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/25" aria-label="Fermer"><x-icon name="close" /></button>
+                                </div>
+                            </template>
+                        @else
+                            <x-avatar :user="$profile->user" :size="140" square tone="navy" class="ring-4 ring-white shadow-lift" />
+                        @endif
                         @if ($profile->verified_at)
-                            <span class="absolute bottom-1.5 right-1.5 flex size-7 items-center justify-center rounded-full bg-brand-600 text-white ring-[3px] ring-white" title="Profil vérifié"><x-icon name="check" :size="14" stroke-width="3.2" /></span>
+                            <span class="absolute -bottom-1 -right-1 flex size-9 items-center justify-center rounded-full bg-brand-600 text-white ring-4 ring-white" title="Profil vérifié"><x-icon name="check" :size="17" stroke-width="3.2" /></span>
                         @endif
                     </span>
                     <div class="flex flex-col gap-1.5 sm:pb-1">

@@ -266,15 +266,22 @@
             @if ($talents->isNotEmpty())
                 <div class="snap-row sm:mx-6 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:p-0 lg:grid-cols-4" data-reveal-stagger="100">
                     @foreach ($talents as $t)
-                        <div data-reveal class="card card-hover flex w-[74%] max-w-[290px] flex-col gap-3.5 p-6 sm:w-auto sm:max-w-none">
-                            <div class="flex items-start justify-between">
-                                <span class="relative"><x-avatar :user="$t->user" :size="56" /><span class="absolute -bottom-0.5 -right-0.5 flex size-5 items-center justify-center rounded-full bg-brand-600 text-white ring-2 ring-white"><x-icon name="check" :size="11" stroke-width="3.4" /></span></span>
-                                <span class="badge-ok">Vérifié</span>
+                        <article data-reveal class="card card-hover group flex w-[72%] max-w-[300px] flex-col overflow-hidden sm:w-auto sm:max-w-none">
+                            <x-talent-photo :user="$t->user">
+                                <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-bold text-ok-700 shadow-sm backdrop-blur"><x-icon name="shield" :size="13" /> Vérifié</span>
+                                <span class="absolute inset-x-4 bottom-3.5 flex flex-col text-white">
+                                    <span class="font-display text-[21px] font-bold leading-tight drop-shadow">{{ $t->user->first_name }} {{ mb_substr($t->user->last_name, 0, 1) }}.</span>
+                                    <span class="text-[13px] font-semibold text-white/85">{{ $t->field }}</span>
+                                </span>
+                            </x-talent-photo>
+                            <div class="flex flex-1 flex-col gap-3 p-5">
+                                <span class="line-clamp-2 text-[14.5px] leading-snug text-ink-700">{{ $t->headline }}</span>
+                                <span class="mt-auto flex flex-wrap gap-1.5">
+                                    @if ($t->countryName())<span class="inline-flex items-center gap-1.5 rounded-lg bg-gold-50 px-2.5 py-1 text-xs font-bold text-gold-700 ring-1 ring-gold-200"><x-icon name="globe" :size="13" /> Formé(e) en {{ $t->countryName() }}</span>@endif
+                                    @if ($t->language_cert)<span class="rounded-lg bg-ink-50 px-2.5 py-1 text-xs font-semibold text-ink-700 ring-1 ring-ink-100">{{ $t->language_cert }}</span>@endif
+                                </span>
                             </div>
-                            <span class="font-display text-[18px] font-bold text-navy-950">{{ $t->user->first_name }} {{ mb_substr($t->user->last_name, 0, 1) }}.</span>
-                            <span class="text-sm leading-snug text-ink-600">{{ $t->headline }}</span>
-                            @if ($t->countryName())<span class="mt-auto inline-flex items-center gap-1.5 self-start rounded-lg bg-gold-50 px-2.5 py-1 text-xs font-bold text-gold-700 ring-1 ring-gold-200"><x-icon name="globe" :size="13" /> Formé(e) en {{ $t->countryName() }}</span>@endif
-                        </div>
+                        </article>
                     @endforeach
                 </div>
             @else

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Conversation;
 use App\Models\Dossier;
+use App\Models\GroupInvitation;
 use App\Models\User;
 use App\Services\OtpService;
 use App\Support\Phone;
@@ -142,6 +143,10 @@ class RegisterController extends Controller
         });
 
         session()->forget('register');
+
+        // L'adresse vient d'être vérifiée par code : les invitations de groupe qui lui sont destinées sont acceptées
+        GroupInvitation::acceptPendingFor($user);
+
         Auth::login($user, true);
         $request->session()->regenerate();
 

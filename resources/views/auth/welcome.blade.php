@@ -20,6 +20,10 @@
 
             {{-- Choix du profil --}}
             <form method="GET" action="{{ route('register') }}" class="relative -mt-5 flex flex-1 flex-col gap-3 rounded-t-[28px] bg-canvas px-5 pb-[calc(env(safe-area-inset-bottom)+24px)] pt-7 text-ink-900 lg:mt-0 lg:justify-center lg:rounded-none lg:bg-white lg:p-12">
+                @if (filter_var(request('email'), FILTER_VALIDATE_EMAIL))
+                    {{-- Inscription depuis une invitation : l'adresse suit jusqu'au formulaire --}}
+                    <input type="hidden" name="email" value="{{ request('email') }}">
+                @endif
                 <div class="flex flex-col gap-1 pb-2">
                     <h2 class="text-[24px] font-bold text-navy-950 lg:text-[28px]">Je suis…</h2>
                     <p class="text-sm text-ink-600">Choisissez le profil qui vous correspond.</p>

@@ -19,7 +19,7 @@
                 <span class="field-label">Adresse e-mail</span>
                 <span class="field-group">
                     <x-icon name="mail" :size="19" class="ml-3.5 text-ink-400" />
-                    <input name="email" type="email" value="{{ old('email') }}" autocomplete="email" inputmode="email" placeholder="vous@exemple.com" required autofocus class="min-w-0 flex-1 bg-transparent px-3 text-[15px] outline-none placeholder:text-ink-400">
+                    <input name="email" type="email" value="{{ old('email', request('email')) }}" autocomplete="email" inputmode="email" placeholder="vous@exemple.com" required autofocus class="min-w-0 flex-1 bg-transparent px-3 text-[15px] outline-none placeholder:text-ink-400">
                 </span>
                 <x-field-error name="email" />
             </label>

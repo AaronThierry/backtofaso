@@ -43,7 +43,7 @@
             <span class="field-label">Adresse e-mail</span>
             <span class="field-group">
                 <x-icon name="mail" :size="19" class="ml-3.5 text-ink-400" />
-                <input name="email" type="email" inputmode="email" value="{{ old('email', $old['email'] ?? '') }}" autocomplete="email" placeholder="vous@exemple.com" required class="min-w-0 flex-1 bg-transparent px-3 text-[15px] outline-none placeholder:text-ink-400">
+                <input name="email" type="email" inputmode="email" value="{{ old('email', $old['email'] ?? request('email', '')) }}" autocomplete="email" placeholder="vous@exemple.com" required class="min-w-0 flex-1 bg-transparent px-3 text-[15px] outline-none placeholder:text-ink-400">
             </span>
             <span class="text-[12.5px] text-ink-600">Elle servira à vous connecter. Nous y enverrons un code pour la vérifier.</span>
             <x-field-error name="email" />

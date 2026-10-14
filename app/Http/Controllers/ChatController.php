@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Conversation;
+use App\Models\GroupInvitation;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -76,7 +77,8 @@ class ChatController extends Controller
                 : $conversation->users->sortBy(fn ($u) => [$u->pivot->role === 'admin' ? 0 : 1, $u->first_name])->values(),
             'seenUntil' => $conversation->seenUntilFor($user),
             'hasMore' => $messages->count() === 50,
-            'canManage' => $conversation->type === Conversation::GROUP && $conversation->isAdmin($user),
+            'canManage' => $canManage = $conversation->type === Conversation::GROUP && $conversation->isAdmin($user),
+            'invitations' => $canManage ? GroupInvitation::pending()->where('conversation_id', $conversation->id)->latest()->get() : collect(),
         ]);
     }
 

@@ -25,6 +25,7 @@
                 seenUntil: @js($seenUntil),
                 hasMore: @js($hasMore),
                 direct: @js($isDirect),
+                openInfo: @js(session('openInfo') || $errors->invite->any()),
              })"
              @dragover.prevent="dragging = true" @dragleave.self.prevent="dragging = false" @drop.prevent="dropFile($event)"
              @keydown.escape.window="lightbox = null; info = false">
@@ -307,6 +308,44 @@
                                     </div>
                                 @endif
 
+                                {{-- Inviter par e-mail --}}
+                                @if ($canManage)
+                                    <div x-data="{ open: {{ $errors->invite->any() ? 'true' : 'false' }} }" class="flex flex-col gap-2">
+                                        <button type="button" x-show="!open" @click="open = true; $nextTick(() => $refs.emails.focus())" class="btn-secondary min-h-11 text-sm"><x-icon name="mail" :size="17" /> Inviter par e-mail</button>
+                                        <form x-show="open" x-cloak method="POST" action="{{ route('groups.invitations.store', $conversation) }}" class="flex flex-col gap-3 rounded-2xl bg-ink-50 p-3 ring-1 ring-ink-100" x-data="{ sending: false }" @submit="sending = true">
+                                            @csrf
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-sm font-bold text-navy-950">Inviter par e-mail</span>
+                                                <button type="button" @click="open = false" class="text-xs font-semibold text-ink-500 hover:text-ink-900">Annuler</button>
+                                            </div>
+                                            <textarea x-ref="emails" name="emails" rows="3" required placeholder="awa@exemple.com, issouf@exemple.com" class="field py-2.5 text-sm">{{ old('emails') }}</textarea>
+                                            @if ($errors->invite->any())
+                                                <span class="text-[12.5px] font-semibold text-err-700">{{ $errors->invite->first() }}</span>
+                                            @endif
+                                            <span class="text-[12px] leading-snug text-ink-500">Chaque personne reçoit un lien personnel, valable {{ \App\Models\GroupInvitation::VALID_DAYS }} jours, qui ne fonctionne qu’avec son adresse. Sans compte, elle pourra s’inscrire et rejoindra le groupe automatiquement.</span>
+                                            <button class="btn-primary min-h-10 text-sm" :disabled="sending">
+                                                <span x-show="!sending" class="flex items-center gap-2"><x-icon name="send" :size="16" /> Envoyer les invitations</span>
+                                                <span x-show="sending" x-cloak class="flex items-center gap-2"><span class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span> Envoi…</span>
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    @if ($invitations->isNotEmpty())
+                                        <div class="flex flex-col gap-1.5">
+                                            <span class="text-xs font-bold uppercase tracking-[0.14em] text-ink-500">Invitations en attente</span>
+                                            @foreach ($invitations as $invitation)
+                                                <div class="flex items-center gap-3 rounded-xl bg-gold-50/60 px-2.5 py-2 ring-1 ring-gold-200/60">
+                                                    <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-gold-700"><x-icon name="mail" :size="16" /></span>
+                                                    <span class="flex min-w-0 flex-1 flex-col"><span class="truncate text-[13.5px] font-semibold text-navy-950">{{ $invitation->email }}</span><span class="text-[11.5px] text-ink-500">Expire {{ $invitation->expires_at->diffForHumans() }}</span></span>
+                                                    <form method="POST" action="{{ route('groups.invitations.destroy', [$conversation, $invitation]) }}">@csrf @method('DELETE')
+                                                        <button class="flex size-8 items-center justify-center rounded-lg text-ink-400 hover:bg-err-50 hover:text-err-700" aria-label="Annuler l’invitation de {{ $invitation->email }}" title="Annuler l’invitation"><x-icon name="close" :size="15" /></button>
+                                                    </form>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                @endif
+
                                 <div class="flex flex-col gap-2">
                                     <span class="flex items-center justify-between text-xs font-bold uppercase tracking-[0.14em] text-ink-500">Membres <span class="normal-case tracking-normal">{{ $members->count() }}</span></span>
                                     @foreach ($members as $member)
@@ -345,14 +384,14 @@
 
     @push('scripts')
         <script>
-            function chatRoom({ fetchUrl, postUrl, deleteUrl, topic, initial, seenUntil, hasMore, direct }) {
+            function chatRoom({ fetchUrl, postUrl, deleteUrl, topic, initial, seenUntil, hasMore, direct, openInfo }) {
                 // Fichiers en attente d'envoi, gardés hors de l'état réactif d'Alpine (FormData exige le vrai objet File)
                 const pendingFiles = new Map();
                 const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
                 return {
                     messages: initial, seenUntil, hasMore, direct,
                     body: '', fileName: '', filePreview: null, error: '',
-                    atBottom: true, newCount: 0, loadingOlder: false, dragging: false, lightbox: null, info: false,
+                    atBottom: true, newCount: 0, loadingOlder: false, dragging: false, lightbox: null, info: openInfo,
                     init() {
                         this.scroll(true, 'auto');
                         // Rafraîchissement toutes les 5 s (à remplacer par Laravel Reverb pour du vrai temps réel)

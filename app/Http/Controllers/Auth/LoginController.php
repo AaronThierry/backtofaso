@@ -132,6 +132,12 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+        // Retour vers une page du site (ex. un lien d'invitation après « Changer de compte »)
+        $next = $request->input('next');
+        if (is_string($next) && str_starts_with($next, '/') && ! str_starts_with($next, '//')) {
+            return redirect($next);
+        }
+
         return redirect()->route('home');
     }
 

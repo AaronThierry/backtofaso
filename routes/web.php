@@ -9,6 +9,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DossierController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupInvitationController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\TalentController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,10 @@ Route::get('/confidentialite', [PageController::class, 'legal'])->defaults('page
 Route::get('/conditions-utilisation', [PageController::class, 'legal'])->defaults('page', 'terms')->name('legal.terms');
 Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
 Route::get('/hors-ligne', [PageController::class, 'offline'])->name('offline');
+
+// ---------- Invitation à un groupe (lien personnel reçu par e-mail) ----------
+Route::get('/invitations/{token}', [GroupInvitationController::class, 'show'])->middleware('throttle:30,1')->name('invitations.show');
+Route::post('/invitations/{token}', [GroupInvitationController::class, 'accept'])->middleware(['auth', 'throttle:10,1'])->name('invitations.accept');
 
 // ---------- Invités : inscription et connexion ----------
 Route::middleware('guest')->group(function () {
@@ -82,6 +87,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/groupes/{conversation}/quitter', [GroupController::class, 'leave'])->name('groups.leave');
         Route::post('/groupes/{conversation}/membres', [GroupController::class, 'addMembers'])->name('groups.members.add');
         Route::delete('/groupes/{conversation}/membres/{user}', [GroupController::class, 'removeMember'])->name('groups.members.remove');
+        Route::post('/groupes/{conversation}/invitations', [GroupInvitationController::class, 'store'])->middleware('throttle:10,1')->name('groups.invitations.store');
+        Route::delete('/groupes/{conversation}/invitations/{invitation}', [GroupInvitationController::class, 'destroy'])->name('groups.invitations.destroy');
 
         Route::get('/compte', [AccountController::class, 'show'])->name('account');
         Route::put('/compte/informations', [AccountController::class, 'updateProfile'])->name('account.profile');

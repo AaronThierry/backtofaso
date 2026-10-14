@@ -269,17 +269,41 @@
                         <article data-reveal class="card card-hover group flex w-[72%] max-w-[300px] flex-col overflow-hidden sm:w-auto sm:max-w-none">
                             <x-talent-photo :user="$t->user">
                                 <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-bold text-ok-700 shadow-sm backdrop-blur"><x-icon name="shield" :size="13" /> Vérifié</span>
+                                <span class="{{ $t->availabilityClass() }} absolute right-3 top-3 shadow-sm">{{ $t->availabilityLabel() }}</span>
                                 <span class="absolute inset-x-4 bottom-3.5 flex flex-col text-white">
                                     <span class="font-display text-[21px] font-bold leading-tight drop-shadow">{{ $t->user->first_name }} {{ mb_substr($t->user->last_name, 0, 1) }}.</span>
                                     <span class="text-[13px] font-semibold text-white/85">{{ $t->field }}</span>
                                 </span>
                             </x-talent-photo>
-                            <div class="flex flex-1 flex-col gap-3 p-5">
-                                <span class="line-clamp-2 text-[14.5px] leading-snug text-ink-700">{{ $t->headline }}</span>
-                                <span class="mt-auto flex flex-wrap gap-1.5">
-                                    @if ($t->countryName())<span class="inline-flex items-center gap-1.5 rounded-lg bg-gold-50 px-2.5 py-1 text-xs font-bold text-gold-700 ring-1 ring-gold-200"><x-icon name="globe" :size="13" /> Formé(e) en {{ $t->countryName() }}</span>@endif
-                                    @if ($t->language_cert)<span class="rounded-lg bg-ink-50 px-2.5 py-1 text-xs font-semibold text-ink-700 ring-1 ring-ink-100">{{ $t->language_cert }}</span>@endif
-                                </span>
+                            <div class="flex flex-1 flex-col gap-4 p-5">
+                                @if ($t->customHeadline())
+                                    <span class="line-clamp-2 text-[15px] font-semibold leading-snug text-navy-950">{{ $t->customHeadline() }}</span>
+                                @endif
+                                <ul class="flex flex-col gap-2 text-[13.5px] text-ink-600">
+                                    @if ($t->countryName())
+                                        <li class="flex items-start gap-2.5"><x-icon name="globe" :size="16" class="mt-px shrink-0 text-gold-500" /><span>Formé(e) en <b class="font-semibold text-ink-900">{{ $t->countryName() }}</b>{{ $t->graduation_year ? ' · '.$t->graduation_year : '' }}</span></li>
+                                    @endif
+                                    @if ($t->school)
+                                        <li class="flex items-start gap-2.5"><x-icon name="graduation" :size="16" class="mt-px shrink-0 text-ink-400" /><span class="line-clamp-1">{{ collect([$t->school, $t->school_city])->filter()->join(', ') }}</span></li>
+                                    @endif
+                                    @if ($t->location)
+                                        <li class="flex items-start gap-2.5"><x-icon name="map" :size="16" class="mt-px shrink-0 text-ink-400" /><span>Basé(e) à {{ $t->location }}</span></li>
+                                    @endif
+                                    @if ($t->languages || $t->language_cert)
+                                        <li class="flex items-start gap-2.5"><x-icon name="language" :size="16" class="mt-px shrink-0 text-ink-400" /><span class="line-clamp-1">{{ collect($t->languages ?? [])->join(', ') }}{{ $t->language_cert ? ($t->languages ? ' · ' : '').$t->language_cert : '' }}</span></li>
+                                    @endif
+                                </ul>
+                                @if ($t->skills)
+                                    <span class="flex flex-wrap gap-1.5">
+                                        @foreach (array_slice($t->skills, 0, 3) as $skill)
+                                            <span class="rounded-lg bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-800 ring-1 ring-brand-100">{{ $skill }}</span>
+                                        @endforeach
+                                        @if (count($t->skills) > 3)<span class="rounded-lg bg-ink-50 px-2 py-1 text-xs font-semibold text-ink-500">+{{ count($t->skills) - 3 }}</span>@endif
+                                    </span>
+                                @endif
+                                <a href="{{ auth()->check() ? route('talents.show', $t) : route('register', ['profil' => 'recruiter']) }}" class="mt-auto inline-flex items-center gap-1.5 border-t border-ink-100 pt-4 text-[13.5px] font-bold text-brand-600 transition-all hover:gap-2.5">
+                                    {{ auth()->check() ? 'Voir le profil' : 'Voir le profil complet' }} <x-icon name="arrow" :size="15" />
+                                </a>
                             </div>
                         </article>
                     @endforeach

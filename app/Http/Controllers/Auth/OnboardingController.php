@@ -83,7 +83,7 @@ class OnboardingController extends Controller
         if ($user->role === User::ROLE_GRADUATE && ! $user->talentProfile) {
             TalentProfile::create([
                 'user_id' => $user->id,
-                'headline' => 'Diplômé(e) de retour au Burkina',
+                'headline' => TalentProfile::DEFAULT_HEADLINE,
                 'study_country' => $user->destination,
                 'field' => $user->interests[0] ?? 'Autre',
                 'languages' => ['Français'],

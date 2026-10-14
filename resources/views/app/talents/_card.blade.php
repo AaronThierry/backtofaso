@@ -11,19 +11,30 @@
     </x-talent-photo>
 
     <span class="flex flex-1 flex-col gap-3 p-5">
-        <span class="line-clamp-2 text-[14.5px] font-semibold leading-snug text-navy-950 group-hover:text-brand-700">{{ $profile->headline }}</span>
+        @if ($profile->customHeadline())
+            <span class="line-clamp-2 text-[14.5px] font-semibold leading-snug text-navy-950 group-hover:text-brand-700">{{ $profile->customHeadline() }}</span>
+        @endif
 
         <span class="flex flex-col gap-1.5 text-[13px] text-ink-600">
             @if ($profile->countryName())
-                <span class="flex items-center gap-2"><x-icon name="globe" :size="16" class="shrink-0 text-ink-400" /><span class="truncate">Formé(e) en <b class="font-semibold text-ink-800">{{ $profile->countryName() }}</b></span></span>
+                <span class="flex items-center gap-2"><x-icon name="globe" :size="16" class="shrink-0 text-gold-500" /><span class="truncate">Formé(e) en <b class="font-semibold text-ink-800">{{ $profile->countryName() }}</b></span></span>
             @endif
             @if ($profile->school || $profile->school_city)
                 <span class="flex items-center gap-2"><x-icon name="graduation" :size="16" class="shrink-0 text-ink-400" /><span class="truncate">{{ collect([$profile->school, $profile->school_city, $profile->graduation_year])->filter()->join(' · ') }}</span></span>
             @endif
             @if ($profile->location)
-                <span class="flex items-center gap-2"><x-icon name="map" :size="16" class="shrink-0 text-ink-400" /><span class="truncate">{{ $profile->location }}</span></span>
+                <span class="flex items-center gap-2"><x-icon name="map" :size="16" class="shrink-0 text-ink-400" /><span class="truncate">Basé(e) à {{ $profile->location }}</span></span>
             @endif
         </span>
+
+        @if ($profile->skills)
+            <span class="flex flex-wrap gap-1.5">
+                @foreach (array_slice($profile->skills, 0, 3) as $skill)
+                    <span class="rounded-lg bg-brand-50 px-2 py-1 text-[11.5px] font-semibold text-brand-800 ring-1 ring-brand-100">{{ $skill }}</span>
+                @endforeach
+                @if (count($profile->skills) > 3)<span class="rounded-lg bg-ink-50 px-2 py-1 text-[11.5px] font-semibold text-ink-500">+{{ count($profile->skills) - 3 }}</span>@endif
+            </span>
+        @endif
 
         @if ($profile->languages || $profile->language_cert)
             <span class="mt-auto flex flex-wrap gap-1.5 border-t border-ink-100 pt-3.5">

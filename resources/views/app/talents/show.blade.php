@@ -34,7 +34,7 @@
                     </span>
                     <div class="flex flex-col gap-1.5 sm:pb-1">
                         <h1 class="text-[28px] font-bold leading-tight text-navy-950 lg:text-[32px]">{{ $profile->user->name }}</h1>
-                        <p class="text-[15.5px] text-ink-700">{{ $profile->headline }}</p>
+                        <p class="text-[15.5px] text-ink-700">{{ $profile->customHeadline() ?? $profile->field }}</p>
                         <div class="flex flex-wrap items-center gap-2 pt-1">
                             <span class="{{ $profile->availabilityClass() }}">{{ $profile->availabilityLabel() }}{{ $profile->available_from && $profile->availability !== 'available' ? ' · '.$profile->available_from : '' }}</span>
                             @if ($profile->location)

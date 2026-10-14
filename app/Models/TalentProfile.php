@@ -46,6 +46,15 @@ class TalentProfile extends Model
         return $query->where('is_public', true)->whereNotNull('verified_at');
     }
 
+    /** Titre posé automatiquement à la création du profil, en attendant que le diplômé le personnalise */
+    public const DEFAULT_HEADLINE = 'Diplômé(e) de retour au Burkina';
+
+    /** Titre à afficher, ou null tant que le diplômé a gardé le titre par défaut */
+    public function customHeadline(): ?string
+    {
+        return $this->headline && $this->headline !== self::DEFAULT_HEADLINE ? $this->headline : null;
+    }
+
     /** Nom du pays où le diplôme a été obtenu */
     public function countryName(): ?string
     {

@@ -123,14 +123,16 @@ sudo -u www-data php artisan storage:link
 **Ne pas lancer `db:seed` en production** (ce sont des données de démonstration). Créer seulement le compte administrateur, avec une **adresse e-mail réelle que vous consultez** : chaque connexion demande un code envoyé à cette adresse.
 
 ```bash
-sudo -u www-data php artisan tinker
+sudo -u www-data php artisan admin:create
 ```
 
-```php
-App\Models\User::create(['first_name'=>'Admin','last_name'=>'Travel Express','phone'=>'+226XXXXXXXX','email'=>'VOTRE_ADRESSE@exemple.com','password'=>'MOT_DE_PASSE','role'=>'admin','email_verified_at'=>now(),'onboarded_at'=>now()]);
-App\Models\Conversation::superGroup()->users()->syncWithoutDetaching([App\Models\User::first()->id => ['role'=>'admin']]);
-exit
-```
+La commande demande prénom, nom, e-mail, téléphone et mot de passe (saisie masquée).
+Le compte est créé avec l’e-mail vérifié et rejoint la communauté comme administrateur.
+
+- Promouvoir un compte existant : `sudo -u www-data php artisan admin:create --promote=email@exemple.com`
+- Créer un conseiller : `sudo -u www-data php artisan admin:create --role=agent`
+
+Le back-office est ensuite accessible sur **https://backtoburkina.bf/admin** (bouton « Administration » dans le menu).
 
 Puis :
 

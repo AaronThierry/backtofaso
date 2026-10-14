@@ -1,6 +1,11 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\ContactController as AdminContactController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\DossierController as AdminDossierController;
+use App\Http\Controllers\Admin\TalentController as AdminTalentController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\OnboardingController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -97,5 +102,30 @@ Route::middleware('auth')->group(function () {
         Route::put('/compte/notifications', [AccountController::class, 'updateNotifications'])->name('account.notifications');
         Route::put('/compte/mot-de-passe', [AccountController::class, 'updatePassword'])->middleware('throttle:6,1')->name('account.password');
         Route::delete('/compte', [AccountController::class, 'destroy'])->middleware('throttle:3,1')->name('account.destroy');
+    });
+});
+
+// ---------- Back-office : équipe Travel Express ----------
+Route::middleware(['auth', 'staff'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', AdminDashboardController::class)->name('dashboard');
+
+    Route::get('/dossiers', [AdminDossierController::class, 'index'])->name('dossiers.index');
+    Route::get('/dossiers/{dossier}', [AdminDossierController::class, 'show'])->name('dossiers.show');
+    Route::put('/dossiers/{dossier}', [AdminDossierController::class, 'update'])->name('dossiers.update');
+    Route::post('/dossiers/{dossier}/documents', [AdminDossierController::class, 'addDocument'])->name('dossiers.documents.add');
+    Route::get('/documents/{document}', [AdminDossierController::class, 'download'])->name('documents.download');
+    Route::post('/documents/{document}/verification', [AdminDossierController::class, 'review'])->name('documents.review');
+
+    Route::get('/talents', [AdminTalentController::class, 'index'])->name('talents.index');
+    Route::post('/talents/{profile}/verification', [AdminTalentController::class, 'verify'])->name('talents.verify');
+
+    Route::get('/messages-contact', [AdminContactController::class, 'index'])->name('contacts.index');
+    Route::post('/messages-contact/{message}/traite', [AdminContactController::class, 'toggle'])->name('contacts.toggle');
+
+    // Utilisateurs et rôles : administrateurs uniquement
+    Route::middleware('admin')->group(function () {
+        Route::get('/utilisateurs', [AdminUserController::class, 'index'])->name('users.index');
+        Route::put('/utilisateurs/{user}/role', [AdminUserController::class, 'updateRole'])->name('users.role');
+        Route::delete('/utilisateurs/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
     });
 });

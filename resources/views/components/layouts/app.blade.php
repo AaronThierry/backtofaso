@@ -60,10 +60,17 @@ $frame = match (true) {
             </nav>
 
             <div class="relative mt-auto flex flex-col gap-3 p-4">
-                <a href="{{ route('chat.show', \App\Models\Conversation::superGroup()) }}" class="glass flex flex-col gap-1 rounded-2xl p-4 transition hover:bg-white/15">
-                    <span class="flex items-center gap-2 text-sm font-bold"><x-icon name="help" :size="18" class="text-gold-300" /> Besoin d’aide ?</span>
-                    <span class="text-[12.5px] leading-snug text-white/65">Posez votre question à la communauté ou à votre conseiller.</span>
-                </a>
+                @if ($user->isStaff())
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 rounded-2xl bg-linear-to-r from-gold-400 to-gold-500 p-3.5 text-navy-950 shadow-lg transition hover:brightness-105">
+                        <span class="flex size-9 items-center justify-center rounded-xl bg-navy-950/10"><x-icon name="shield" :size="18" /></span>
+                        <span class="flex flex-col leading-tight"><span class="text-sm font-extrabold">Administration</span><span class="text-xs font-semibold text-navy-950/70">Dossiers, talents, contacts</span></span>
+                    </a>
+                @else
+                    <a href="{{ route('chat.show', \App\Models\Conversation::superGroup()) }}" class="glass flex flex-col gap-1 rounded-2xl p-4 transition hover:bg-white/15">
+                        <span class="flex items-center gap-2 text-sm font-bold"><x-icon name="help" :size="18" class="text-gold-300" /> Besoin d’aide ?</span>
+                        <span class="text-[12.5px] leading-snug text-white/65">Posez votre question à la communauté ou à votre conseiller.</span>
+                    </a>
+                @endif
                 <div class="flex items-center gap-1 rounded-2xl bg-white/5 p-1.5 ring-1 ring-white/10">
                     <a href="{{ route('account') }}" class="flex min-w-0 flex-1 items-center gap-3 rounded-xl p-1.5 transition hover:bg-white/5">
                         <x-avatar :user="$user" :size="38" tone="gold" />

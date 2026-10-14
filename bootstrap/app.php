@@ -13,6 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'onboarded' => \App\Http\Middleware\EnsureOnboarded::class,
+            'staff' => \App\Http\Middleware\EnsureStaff::class,
+            'admin' => \App\Http\Middleware\EnsureAdmin::class,
         ]);
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('dashboard'));

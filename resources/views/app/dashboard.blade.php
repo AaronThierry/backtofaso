@@ -13,7 +13,7 @@
 
     // Prochaine étape, selon le profil : [icône, titre, texte, lien, bouton]
     $next = match (true) {
-        $user->isStaff() => ['shield', ($stats['pending_talents'] ?? 0).' profil(s) talent à vérifier', 'Vérifiez les diplômés en attente pour les rendre visibles des recruteurs. En attendant le back-office : php artisan talents:verify', route('talents.index'), 'Voir le vivier'],
+        $user->isStaff() => ['shield', 'Votre espace d’administration', 'Vérifiez les documents des dossiers, les profils talents en attente et les messages de contact.', route('admin.dashboard'), 'Ouvrir l’administration'],
         (bool) $dossier && $docsTodo->isNotEmpty() => ['upload', $docsTodo->count().' document(s) à fournir', 'Déposez-les dès maintenant pour que votre conseiller puisse avancer sur votre dossier.', route('dossier'), 'Déposer mes documents'],
         (bool) $dossier && $docsPending > 0 => ['clock', 'Documents en cours de vérification', 'Votre conseiller vérifie les pièces envoyées. Vous serez prévenu dès qu’il y a du nouveau.', route('dossier'), 'Suivre mon dossier'],
         (bool) $dossier => ['folder', 'Étape en cours : '.$dossier->stepLabel(), 'Suivez l’avancement de votre dossier et échangez avec votre conseiller.', route('dossier'), 'Voir mon dossier'],
@@ -72,9 +72,9 @@
         {{-- Chiffres clés --}}
         <div class="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4" data-reveal-stagger="70">
             @if ($user->isStaff())
-                <x-stat data-reveal icon="shield" label="Profils à vérifier" :value="$stats['pending_talents']" hint="Vivier de talents" :href="route('talents.index')" tone="gold" />
-                <x-stat data-reveal icon="mail" label="Messages de contact" :value="$stats['contacts']" hint="Non traités" tone="warn" />
-                <x-stat data-reveal icon="folder" label="Dossiers ouverts" :value="$stats['dossiers']" hint="En cours" tone="brand" />
+                <x-stat data-reveal icon="shield" label="Profils à vérifier" :value="$stats['pending_talents']" hint="Administration" :href="route('admin.talents.index')" tone="gold" />
+                <x-stat data-reveal icon="mail" label="Messages de contact" :value="$stats['contacts']" hint="Non traités" :href="route('admin.contacts.index')" tone="warn" />
+                <x-stat data-reveal icon="folder" label="Dossiers ouverts" :value="$stats['dossiers']" hint="Suivi" :href="route('admin.dossiers.index')" tone="brand" />
                 <x-stat data-reveal icon="chat" label="Messages non lus" :value="$unread" hint="Messagerie" :href="route('chat.index')" tone="ok" />
             @elseif ($dossier)
                 <x-stat data-reveal icon="folder" label="Avancement" :value="$dossier->progressPercent().' %'" :hint="'Étape '.$dossier->current_step.' sur '.count(\App\Models\Dossier::STEPS)" :href="route('dossier')" />

@@ -82,5 +82,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/groupes/{conversation}/quitter', [GroupController::class, 'leave'])->name('groups.leave');
 
         Route::get('/compte', [AccountController::class, 'show'])->name('account');
+        Route::put('/compte/informations', [AccountController::class, 'updateProfile'])->name('account.profile');
+        Route::post('/compte/photo', [AccountController::class, 'updatePhoto'])->name('account.photo');
+        Route::delete('/compte/photo', [AccountController::class, 'deletePhoto'])->name('account.photo.delete');
+        Route::put('/compte/notifications', [AccountController::class, 'updateNotifications'])->name('account.notifications');
+        Route::put('/compte/mot-de-passe', [AccountController::class, 'updatePassword'])->middleware('throttle:6,1')->name('account.password');
+        Route::delete('/compte', [AccountController::class, 'destroy'])->middleware('throttle:3,1')->name('account.destroy');
     });
 });

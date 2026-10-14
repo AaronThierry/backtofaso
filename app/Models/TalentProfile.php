@@ -16,8 +16,8 @@ class TalentProfile extends Model
     ];
 
     protected $fillable = [
-        'user_id', 'headline', 'field', 'school', 'school_city', 'graduation_year', 'skills', 'languages',
-        'hsk_level', 'availability', 'available_from', 'location', 'bio', 'cv_path', 'verified_at', 'is_public',
+        'user_id', 'headline', 'field', 'school', 'school_city', 'study_country', 'graduation_year', 'skills', 'languages',
+        'language_cert', 'availability', 'available_from', 'location', 'bio', 'cv_path', 'verified_at', 'is_public',
     ];
 
     protected function casts(): array
@@ -43,6 +43,12 @@ class TalentProfile extends Model
     public function scopeVisible(Builder $query): Builder
     {
         return $query->where('is_public', true)->whereNotNull('verified_at');
+    }
+
+    /** Nom du pays où le diplôme a été obtenu */
+    public function countryName(): ?string
+    {
+        return AppSupportDestinations::name($this->study_country);
     }
 
     public function availabilityLabel(): string

@@ -14,6 +14,9 @@
     </span>
 
     <span class="flex flex-col gap-1.5 text-[13px] text-ink-600">
+        @if ($profile->countryName())
+            <span class="flex items-center gap-2"><x-icon name="globe" :size="16" class="shrink-0 text-ink-400" /><span class="truncate">Formé(e) en <b class="font-semibold text-ink-800">{{ $profile->countryName() }}</b></span></span>
+        @endif
         @if ($profile->school || $profile->school_city)
             <span class="flex items-center gap-2"><x-icon name="graduation" :size="16" class="shrink-0 text-ink-400" /><span class="truncate">{{ collect([$profile->school, $profile->school_city, $profile->graduation_year])->filter()->join(' · ') }}</span></span>
         @endif
@@ -22,10 +25,10 @@
         @endif
     </span>
 
-    @if ($profile->languages || $profile->hsk_level)
+    @if ($profile->languages || $profile->language_cert)
         <span class="mt-auto flex flex-wrap gap-1.5 border-t border-ink-100 pt-3.5">
-            @if ($profile->hsk_level)
-                <span class="rounded-lg bg-gold-50 px-2 py-1 text-[11.5px] font-bold text-gold-700 ring-1 ring-gold-200">Chinois {{ $profile->hsk_level }}</span>
+            @if ($profile->language_cert)
+                <span class="rounded-lg bg-gold-50 px-2 py-1 text-[11.5px] font-bold text-gold-700 ring-1 ring-gold-200">{{ $profile->language_cert }}</span>
             @endif
             @foreach (array_slice($profile->languages ?? [], 0, 3) as $lang)
                 <span class="rounded-lg bg-ink-50 px-2 py-1 text-[11.5px] font-semibold text-ink-700 ring-1 ring-ink-100">{{ $lang }}</span>

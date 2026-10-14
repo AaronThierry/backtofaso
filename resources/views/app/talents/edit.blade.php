@@ -24,16 +24,24 @@
 
         {{-- Formation --}}
         <section class="card flex flex-col gap-4 p-5 sm:p-6">
-            <h2 class="flex items-center gap-2.5 text-[17px] font-bold text-navy-950"><span class="flex size-8 items-center justify-center rounded-lg bg-brand-50 text-brand-600"><x-icon name="graduation" :size="17" /></span> Formation en Chine</h2>
+            <h2 class="flex items-center gap-2.5 text-[17px] font-bold text-navy-950"><span class="flex size-8 items-center justify-center rounded-lg bg-brand-50 text-brand-600"><x-icon name="graduation" :size="17" /></span> Formation à l’étranger</h2>
             <div class="grid gap-4 sm:grid-cols-2">
-                <label class="flex flex-col gap-1.5"><span class="field-label">Université</span>
+                <label class="flex flex-col gap-1.5"><span class="field-label">Pays des études</span>
+                    <select name="study_country" class="field">
+                        <option value="">Choisir un pays</option>
+                        @foreach ($countries as $key => $name)
+                            <option value="{{ $key }}" @selected(old('study_country', $profile->study_country) === $key)>{{ $name }}</option>
+                        @endforeach
+                    </select>
+                    <x-field-error name="study_country" /></label>
+                <label class="flex flex-col gap-1.5"><span class="field-label">Université ou école</span>
                     <input name="school" value="{{ old('school', $profile->school) }}" class="field"></label>
-                <label class="flex flex-col gap-1.5"><span class="field-label">Ville de l’université</span>
-                    <input name="school_city" value="{{ old('school_city', $profile->school_city) }}" placeholder="Wuhan" class="field"></label>
+                <label class="flex flex-col gap-1.5"><span class="field-label">Ville</span>
+                    <input name="school_city" value="{{ old('school_city', $profile->school_city) }}" placeholder="Montréal, Lyon, Wuhan…" class="field"></label>
                 <label class="flex flex-col gap-1.5"><span class="field-label">Année du diplôme</span>
                     <input name="graduation_year" type="number" value="{{ old('graduation_year', $profile->graduation_year) }}" placeholder="{{ date('Y') }}" class="field"></label>
-                <label class="flex flex-col gap-1.5"><span class="field-label">Niveau HSK</span>
-                    <input name="hsk_level" value="{{ old('hsk_level', $profile->hsk_level) }}" placeholder="HSK 5" class="field"></label>
+                <label class="flex flex-col gap-1.5 sm:col-span-2"><span class="field-label">Certification de langue <span class="font-medium text-ink-500">(facultatif)</span></span>
+                    <input name="language_cert" value="{{ old('language_cert', $profile->language_cert) }}" maxlength="60" placeholder="HSK 5, TOEFL 95, DELF B2, TestDaF…" class="field"></label>
             </div>
         </section>
 
@@ -44,7 +52,7 @@
                 <input name="skills" value="{{ old('skills', implode(', ', $profile->skills ?? [])) }}" placeholder="Laravel, gestion de projet, AutoCAD" class="field">
                 <span class="text-[12.5px] text-ink-500">Séparez-les par des virgules.</span></label>
             <label class="flex flex-col gap-1.5"><span class="field-label">Langues</span>
-                <input name="languages" value="{{ old('languages', implode(', ', $profile->languages ?? [])) }}" placeholder="Français, Anglais, Chinois" class="field">
+                <input name="languages" value="{{ old('languages', implode(', ', $profile->languages ?? [])) }}" placeholder="Français, Anglais, Mooré" class="field">
                 <span class="text-[12.5px] text-ink-500">Séparez-les par des virgules.</span></label>
         </section>
 

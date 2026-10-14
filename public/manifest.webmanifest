@@ -1,7 +1,7 @@
 {
     "name": "Back to Burkina",
     "short_name": "Back to BF",
-    "description": "Étudier en Chine, revenir bâtir le Faso. Accompagnement Travel Express du départ jusqu’au retour.",
+    "description": "Étudier à l’étranger, revenir bâtir le Faso. Accompagnement Travel Express du départ jusqu’au retour.",
     "lang": "fr",
     "start_url": "/accueil?source=pwa",
     "scope": "/",

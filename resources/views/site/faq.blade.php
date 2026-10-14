@@ -1,4 +1,4 @@
-<x-layouts.site title="Questions fréquentes" description="Langue, bourses, documents, visa, vie en Chine, vivier de talents, compte : les réponses aux questions les plus posées à Travel Express.">
+<x-layouts.site title="Questions fréquentes" description="Destinations, langue, bourses, documents, visa, vie sur place, vivier de talents, compte : les réponses aux questions les plus posées à Travel Express.">
     <x-site.page-hero eyebrow="FAQ" crumb="Questions fréquentes" title="Questions fréquentes" lead="Les réponses aux questions qu’on nous pose le plus souvent. Vous ne trouvez pas la vôtre ? Écrivez-nous, un conseiller vous répond." />
 
     <section class="mx-auto grid max-w-[1200px] gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[260px_1fr] lg:gap-14"

@@ -35,43 +35,43 @@ class DatabaseSeeder extends Seeder
         $awa = User::factory()->create([
             'first_name' => 'Awa', 'last_name' => 'Ouédraogo', 'phone' => '+22670000002', 'email' => 'awa@exemple.bf',
             'role' => User::ROLE_CANDIDATE, 'last_degree' => 'Bac', 'interests' => ['Informatique'],
-            'chinese_level' => 'none',
+            'destination' => 'canada', 'language_level' => 'advanced',
         ]);
         $dossier = Dossier::openFor($awa);
-        $dossier->update(['advisor_id' => $agent->id, 'program' => 'Licence en informatique', 'current_step' => 3]);
+        $dossier->update(['advisor_id' => $agent->id, 'program' => 'Licence en informatique', 'country' => 'canada', 'current_step' => 3]);
         $dossier->documents()->where('type', 'passport')->update(['status' => DossierDocument::VALIDATED, 'submitted_at' => now()->subDays(6)]);
         $dossier->documents()->where('type', 'diploma')->update(['status' => DossierDocument::VALIDATED, 'submitted_at' => now()->subDays(6)]);
         $dossier->documents()->where('type', 'transcripts')->update(['status' => DossierDocument::TO_COMPLETE, 'note' => 'Il manque le relevé de terminale.', 'submitted_at' => now()->subDays(3)]);
 
-        // --- Étudiant en Chine ---
+        // --- Étudiant à l'étranger ---
         $issouf = User::factory()->create([
             'first_name' => 'Issouf', 'last_name' => 'Sawadogo', 'phone' => '+22670000003', 'email' => 'issouf@exemple.bf',
-            'role' => User::ROLE_STUDENT_ABROAD,
+            'role' => User::ROLE_STUDENT_ABROAD, 'destination' => 'chine',
         ]);
 
         // --- Diplômés du vivier de talents ---
         $talents = [
-            ['Mariam', 'Kaboré', 'Commerce', 'Master en commerce international', 'HSK 6', 'available', ['Négociation', 'Import-export', 'Logistique']],
-            ['Boukary', 'Traoré', 'Santé', 'Médecin généraliste', 'HSK 5', 'available', ['Médecine générale', 'Urgences']],
-            ['Salif', 'Zongo', 'Génie civil', 'Ingénieur génie civil', 'HSK 4', 'soon', ['Béton armé', 'AutoCAD', 'Suivi de chantier']],
-            ['Aminata', 'Compaoré', 'Informatique', 'Ingénieure en génie logiciel', 'HSK 5', 'available', ['Développement web', 'Applications mobiles', 'Bases de données']],
+            ['Mariam', 'Kaboré', 'Commerce', 'Master en commerce international', 'chine', 'HSK 6', ['Français', 'Chinois', 'Anglais'], 'available', ['Négociation', 'Import-export', 'Logistique']],
+            ['Boukary', 'Traoré', 'Santé', 'Médecin généraliste', 'maroc', null, ['Français', 'Arabe'], 'available', ['Médecine générale', 'Urgences']],
+            ['Salif', 'Zongo', 'Génie civil', 'Ingénieur génie civil', 'france', null, ['Français', 'Anglais'], 'soon', ['Béton armé', 'AutoCAD', 'Suivi de chantier']],
+            ['Aminata', 'Compaoré', 'Informatique', 'Ingénieure en génie logiciel', 'canada', 'IELTS 7', ['Français', 'Anglais'], 'available', ['Développement web', 'Applications mobiles', 'Bases de données']],
         ];
         $graduates = [];
-        foreach ($talents as $i => [$first, $last, $field, $headline, $hsk, $availability, $skills]) {
+        foreach ($talents as $i => [$first, $last, $field, $headline, $country, $cert, $languages, $availability, $skills]) {
             $user = User::factory()->create([
                 'first_name' => $first, 'last_name' => $last, 'phone' => '+2267000001'.$i, 'email' => 'talent'.($i + 1).'@exemple.bf',
                 'role' => User::ROLE_GRADUATE,
             ]);
             $profile = TalentProfile::create([
                 'user_id' => $user->id, 'headline' => $headline, 'field' => $field,
-                'school' => '[Université]', 'school_city' => '[Ville]', 'graduation_year' => 2025,
-                'skills' => $skills, 'languages' => ['Français', 'Chinois '.$hsk, 'Anglais'], 'hsk_level' => $hsk,
+                'school' => '[Université]', 'school_city' => '[Ville]', 'study_country' => $country, 'graduation_year' => 2025,
+                'skills' => $skills, 'languages' => $languages, 'language_cert' => $cert,
                 'availability' => $availability, 'available_from' => $availability === 'soon' ? '[mois]' : null,
                 'location' => 'Bobo-Dioulasso', 'verified_at' => now(),
-                'bio' => 'Diplômé(e) en Chine, de retour au Burkina et disponible pour des missions dans mon domaine.',
+                'bio' => 'Diplômé(e) à l’étranger, de retour au Burkina et disponible pour des missions dans mon domaine.',
             ]);
             $profile->experiences()->createMany([
-                ['title' => $headline, 'organization' => '[Université], [Ville], Chine', 'period' => '2021 – 2025', 'kind' => 'education', 'position' => 0],
+                ['title' => $headline, 'organization' => '[Université], [Ville], '.\App\Support\Destinations::name($country), 'period' => '2021 – 2025', 'kind' => 'education', 'position' => 0],
                 ['title' => 'Stage', 'organization' => '[Entreprise], [Ville]', 'period' => '6 mois', 'kind' => 'work', 'position' => 1],
             ]);
             $graduates[] = $user;
@@ -93,11 +93,11 @@ class DatabaseSeeder extends Seeder
         $super->messages()->create(['user_id' => $agent->id, 'topic' => 'annonces',
             'body' => 'Séance d’information à l’agence de Bobo-Dioulasso le [date] à [heure]. Ouverte aux parents.']);
         $super->messages()->create(['user_id' => $issouf->id, 'topic' => 'entraide',
-            'body' => 'Quelqu’un sait combien de temps prend le JW202 après l’admission ?']);
+            'body' => 'Quelqu’un sait combien de temps l’université met à envoyer les documents pour le visa après l’admission ?']);
         $super->messages()->create(['user_id' => $graduates[0]->id, 'topic' => 'entraide',
             'body' => 'Pour moi c’était quelques semaines. Demande à ton conseiller de relancer l’université.']);
         $super->messages()->create(['user_id' => $recruiter->id, 'topic' => 'emplois',
-            'body' => 'Nous recrutons un développeur web à Bobo-Dioulasso. Chinois apprécié. Postulez via le vivier de talents.']);
+            'body' => 'Nous recrutons un développeur web à Bobo-Dioulasso. Anglais apprécié. Postulez via le vivier de talents.']);
         $super->messages()->create(['user_id' => $admin->id, 'topic' => 'bourses',
             'body' => 'Nouvelle bourse ouverte : [nom de la bourse], date limite le [date].']);
 

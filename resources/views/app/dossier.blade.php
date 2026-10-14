@@ -15,7 +15,7 @@
 <x-layouts.app title="Mon dossier" active="dossier">
     <div class="flex flex-col gap-6 lg:gap-8">
         <x-page-header title="Mon dossier" :back="route('dashboard')" eyebrow="Suivi de candidature"
-                       :subtitle="($dossier->program ?? 'Programme à définir avec votre conseiller').($dossier->university ? ' · '.$dossier->university : '')">
+                       :subtitle="collect([$dossier->program ?? 'Programme à définir avec votre conseiller', $dossier->university, $dossier->countryName()])->filter()->join(' · ')">
             @if ($dossier->advisor)
                 <x-slot:actions>
                     <form method="POST" action="{{ route('chat.direct', $dossier->advisor) }}">@csrf

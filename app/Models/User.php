@@ -26,10 +26,10 @@ class User extends Authenticatable
 
     /** Profils proposés à l'inscription */
     public const PUBLIC_ROLES = [
-        self::ROLE_CANDIDATE => ['Futur étudiant', 'Je veux étudier en Chine'],
-        self::ROLE_STUDENT_ABROAD => ['Étudiant en Chine', 'Je suis déjà sur place'],
+        self::ROLE_CANDIDATE => ['Futur étudiant', 'Je veux partir étudier à l’étranger'],
+        self::ROLE_STUDENT_ABROAD => ['Étudiant à l’étranger', 'J’étudie déjà hors du Burkina'],
         self::ROLE_GRADUATE => ['Diplômé de retour', 'Je cherche un emploi ou je lance un projet'],
-        self::ROLE_RECRUITER => ['Recruteur / entreprise', 'Je cherche des profils formés en Chine'],
+        self::ROLE_RECRUITER => ['Recruteur / entreprise', 'Je cherche des profils formés à l’étranger'],
     ];
 
     /** Icône de chaque profil public (composant x-icon) */
@@ -42,18 +42,19 @@ class User extends Authenticatable
 
     public const DEGREES =['Bac', 'Licence', 'Master', 'Autre'];
 
-    public const FIELDS = ['Informatique', 'Génie civil', 'Santé', 'Commerce', 'Langue chinoise', 'Agronomie', 'Autre'];
+    public const FIELDS = ['Informatique', 'Génie civil', 'Santé', 'Commerce', 'Économie et gestion', 'Énergie et mines', 'Agronomie', 'Langues et traduction', 'Autre'];
 
-    public const CHINESE_LEVELS = [
-        'none' => 'Débutant (aucun HSK)',
-        'hsk1-2' => 'HSK 1 – 2',
-        'hsk3-4' => 'HSK 3 – 4',
-        'hsk5-6' => 'HSK 5 – 6',
+    /** Niveau dans la langue d’enseignement du pays visé */
+    public const LANGUAGE_LEVELS = [
+        'beginner' => 'Débutant',
+        'intermediate' => 'Intermédiaire',
+        'advanced' => 'Avancé',
+        'fluent' => 'Courant ou langue maternelle',
     ];
 
     protected $fillable = [
         'first_name', 'last_name', 'phone', 'email', 'password', 'role',
-        'birth_date', 'city', 'last_degree', 'interests', 'chinese_level', 'avatar_path',
+        'birth_date', 'city', 'last_degree', 'interests', 'destination', 'language_level', 'avatar_path',
         'notify_push', 'notify_sms', 'notify_whatsapp', 'notify_email',
         'phone_verified_at', 'email_verified_at', 'onboarded_at',
     ];

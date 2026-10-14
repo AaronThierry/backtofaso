@@ -64,7 +64,7 @@
                         <td align="center" style="padding:26px 24px 0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;">
                             <div style="font-size:13px;font-weight:700;color:#40444A;">Back to Burkina</div>
                             <div style="font-size:12px;line-height:1.7;color:#82868E;padding-top:4px;">
-                                Étudier en Chine, revenir bâtir le Faso.<br>
+                                Étudier à l’étranger, revenir bâtir le Faso.<br>
                                 Un service Travel Express · Bobo-Dioulasso, Burkina Faso
                             </div>
                             <div style="font-size:12px;line-height:1.7;padding-top:10px;">

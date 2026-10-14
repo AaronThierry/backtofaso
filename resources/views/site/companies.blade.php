@@ -1,5 +1,5 @@
-<x-layouts.site title="Recruter des talents formés en Chine" description="Ingénieurs, médecins, commerciaux, techniciens : recrutez des diplômés formés en Chine, bilingues français-chinois et vérifiés par Travel Express.">
-    <x-site.page-hero eyebrow="Entreprises" crumb="Entreprises" title="Recrutez des talents formés en Chine." lead="Des diplômés burkinabè revenus de Chine, qui parlent français et chinois, et dont le profil est vérifié par Travel Express. Pour les entreprises burkinabè comme pour les sociétés chinoises installées au pays.">
+<x-layouts.site title="Recruter des talents formés à l’étranger" description="Ingénieurs, médecins, commerciaux, techniciens : recrutez des diplômés formés à l’étranger, souvent multilingues et vérifiés par Travel Express.">
+    <x-site.page-hero eyebrow="Entreprises" crumb="Entreprises" title="Recrutez des talents formés à l’étranger." lead="Des diplômés burkinabè revenus de Chine, de France, du Canada, du Maroc et d’ailleurs, dont le profil est vérifié par Travel Express. Pour les entreprises burkinabè comme pour les sociétés étrangères installées au pays.">
         <a href="{{ route('register', ['profil' => 'recruiter']) }}" class="btn-gold shine min-h-14 px-7 text-base">Créer un compte recruteur <x-icon name="arrow" :size="18" /></a>
         <a href="{{ route('contact', ['sujet' => 'recrutement']) }}" class="btn-outline-light min-h-14 px-7 text-base">Parler à l’équipe</a>
 
@@ -16,10 +16,10 @@
                         <span class="{{ $t->availabilityClass() }} shrink-0">{{ $t->availabilityLabel() }}</span>
                     </div>
                 @empty
-                    @foreach ([['Ingénieur génie civil', 'HSK 4'], ['Médecin généraliste', 'HSK 5'], ['Développeuse web', 'HSK 5']] as $i => [$job, $hsk])
+                    @foreach ([['Ingénieur génie civil', 'Formé en Chine'], ['Médecin généraliste', 'Formée au Maroc'], ['Développeuse web', 'Formée au Canada']] as $i => [$job, $hsk])
                         <div data-parallax="{{ 0.06 + $i * 0.06 }}" @class(['flex items-center gap-3.5 rounded-2xl bg-white p-4 text-ink-900 shadow-lift', 'sm:ml-10' => $i === 1, 'sm:ml-4' => $i === 2])>
                             <span class="flex size-12 items-center justify-center rounded-full bg-brand-50 text-brand-600"><x-icon name="user" :size="22" /></span>
-                            <span class="flex min-w-0 flex-1 flex-col leading-tight"><span class="truncate font-bold text-navy-950">{{ $job }}</span><span class="text-[13px] text-ink-600">Chinois {{ $hsk }}</span></span>
+                            <span class="flex min-w-0 flex-1 flex-col leading-tight"><span class="truncate font-bold text-navy-950">{{ $job }}</span><span class="text-[13px] text-ink-600">{{ $hsk }}</span></span>
                             <span class="badge-ok">Exemple</span>
                         </div>
                     @endforeach
@@ -36,9 +36,9 @@
         </div>
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal-stagger="100">
             @foreach ([
-                ['language', 'Bilingues', 'Français et chinois, souvent anglais : un atout pour travailler avec des partenaires chinois.'],
-                ['graduation', 'Formés en Chine', 'Ingénierie, santé, commerce, informatique, agronomie : des formations solides dans des universités reconnues.'],
-                ['globe', 'Deux cultures', 'Ils connaissent les pratiques de travail chinoises et le contexte burkinabè.'],
+                ['language', 'Multilingues', 'Français, et selon leur parcours anglais, chinois, allemand, arabe… un atout pour travailler avec des partenaires étrangers.'],
+                ['graduation', 'Formés à l’étranger', 'Ingénierie, santé, commerce, informatique, agronomie : des formations solides dans des universités reconnues.'],
+                ['globe', 'Ouverts sur le monde', 'Ils connaissent les pratiques de travail de leur pays d’études et le contexte burkinabè.'],
                 ['shield', 'Vérifiés', 'Chaque profil est contrôlé par Travel Express avant d’être visible des recruteurs.'],
             ] as [$icon, $t, $d])
                 <div data-reveal class="card card-hover flex flex-col gap-3 p-6">
@@ -62,7 +62,7 @@
             <ol class="flex flex-col gap-4" data-reveal-stagger="120">
                 @foreach ([
                     ['user', 'Créez votre compte recruteur', 'Quelques informations sur vous et votre entreprise. Votre adresse e-mail est vérifiée par un code.'],
-                    ['search', 'Cherchez les bons profils', 'Filtrez le vivier par domaine, compétence, ville ou disponibilité, et consultez les CV.'],
+                    ['search', 'Cherchez les bons profils', 'Filtrez le vivier par domaine, pays de formation, compétence ou disponibilité, et consultez les CV.'],
                     ['chat', 'Contactez directement', 'Écrivez aux candidats par la messagerie, ou publiez votre offre dans le thème Emplois de la communauté.'],
                 ] as $i => [$icon, $t, $d])
                     <li data-reveal="right" class="card flex items-start gap-5 p-6">

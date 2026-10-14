@@ -10,20 +10,21 @@ class Faq
     {
         return [
             'Partir étudier' => ['icon' => 'plane', 'items' => [
-                ['Faut-il parler chinois pour partir ?', 'Pas forcément. Certains programmes sont enseignés en anglais, d’autres commencent par une année de langue chinoise. Votre conseiller vous oriente selon votre profil.'],
-                ['Quel niveau faut-il pour être admis ?', 'Il faut en général le Bac pour une licence, une licence pour un master et un master pour un doctorat. Les universités regardent aussi vos notes, votre projet d’études et, selon le programme, votre niveau d’anglais ou de chinois.'],
+                ['Dans quels pays pouvez-vous m’accompagner ?', 'Chine, France, Canada, Maroc, Turquie, Russie, Allemagne, Belgique, États-Unis, Sénégal… et d’autres pays selon votre projet. Votre conseiller vous aide à choisir la destination qui correspond à vos études, à votre budget et à votre niveau de langue.'],
+                ['Faut-il parler la langue du pays ?', 'Pas forcément au départ. Beaucoup de pays proposent des programmes en anglais ou en français, et certains commencent par une année de langue (chinois, turc, russe, allemand…). Un test de langue est souvent demandé : votre conseiller vous dit lequel.'],
+                ['Quel niveau faut-il pour être admis ?', 'Il faut en général le Bac pour une licence, une licence pour un master et un master pour un doctorat. Les universités regardent aussi vos notes, votre projet d’études et, selon le programme, votre niveau dans la langue d’enseignement.'],
                 ['Combien de temps prend la procédure ?', 'Cela dépend de l’université et de la période de l’année. Votre conseiller vous donne un calendrier précis dès l’ouverture du dossier. Comptez plusieurs mois entre le dépôt du dossier et le départ.'],
-                ['Quand faut-il commencer ?', 'Le plus tôt possible. La plupart des rentrées ont lieu en septembre, et les candidatures se font en général entre novembre et avril. Certaines universités proposent aussi une rentrée en mars.'],
+                ['Quand faut-il commencer ?', 'Le plus tôt possible. La plupart des rentrées ont lieu en septembre, et les candidatures se font en général entre novembre et avril. Selon les pays, il existe aussi des rentrées en janvier ou en mars.'],
             ]],
             'Bourses et frais' => ['icon' => 'graduation', 'items' => [
-                ['Existe-t-il des bourses ?', 'Oui : bourses du gouvernement chinois, bourses des provinces et des villes, bourses des universités elles-mêmes, et bourses de langue chinoise. Les conditions changent chaque année ; votre conseiller vous indique celles ouvertes à votre profil.'],
+                ['Existe-t-il des bourses ?', 'Oui : bourses des gouvernements étrangers (Chine, Turquie, Russie, France…), bourses de coopération (AMCI, DAAD, Fulbright…), bourses des universités et bourses de langue. Les conditions changent chaque année ; votre conseiller vous indique celles ouvertes à votre profil.'],
                 ['Quels sont les frais d’accompagnement ?', '[À compléter par Travel Express : frais de dossier, frais d’accompagnement, modalités de paiement.]'],
-                ['Combien coûte la vie en Chine ?', 'Cela dépend beaucoup de la ville : les grandes métropoles côtières sont plus chères que les villes de l’intérieur. Le logement sur le campus permet de limiter les dépenses. Votre conseiller vous aide à préparer un budget réaliste.'],
+                ['Combien coûte la vie sur place ?', 'Cela dépend beaucoup du pays et de la ville : une grande capitale coûte plus cher qu’une ville moyenne. Le logement en résidence universitaire permet souvent de limiter les dépenses. Votre conseiller vous aide à préparer un budget réaliste.'],
             ]],
             'Votre dossier' => ['icon' => 'folder', 'items' => [
-                ['Quels documents faut-il préparer ?', 'Un passeport valide, vos diplômes et relevés de notes, un certificat médical, un extrait de casier judiciaire, une lettre de motivation et des photos d’identité. Pour un master ou un doctorat, on demande aussi des lettres de recommandation.'],
+                ['Quels documents faut-il préparer ?', 'Un passeport valide, vos diplômes et relevés de notes, une lettre de motivation et des photos d’identité. Selon le pays, on demande aussi un certificat de langue, un certificat médical, un justificatif de ressources, et pour un master ou un doctorat des lettres de recommandation.'],
                 ['Comment suivre l’avancement de mon dossier ?', 'Dans votre espace Back to Burkina, sur le web ou l’application : chaque étape est affichée, vous déposez vos documents en ligne et vous voyez lesquels sont validés.'],
-                ['Qu’est-ce que le formulaire JW202 ?', 'C’est le formulaire officiel délivré par l’université après votre admission. Avec la lettre d’admission, il est indispensable pour demander le visa étudiant (X1) à l’ambassade de Chine.'],
+                ['Quels documents faut-il pour le visa ?', 'Cela dépend du pays : la lettre d’admission, et souvent un document officiel en plus, comme le formulaire JW202 pour la Chine ou le certificat d’acceptation (CAQ) pour le Québec. Votre conseiller vous prépare la liste exacte.'],
             ]],
             'Après les études' => ['icon' => 'briefcase', 'items' => [
                 ['Je suis diplômé, comment rejoindre le vivier de talents ?', 'Créez un compte « Diplômé de retour », complétez votre profil et ajoutez votre diplôme. L’équipe Travel Express le vérifie avant de le publier.'],
@@ -43,7 +44,7 @@ class Faq
 
         return [
             $all['Partir étudier']['items'][0],
-            $all['Partir étudier']['items'][2],
+            $all['Partir étudier']['items'][1],
             $all['Bourses et frais']['items'][0],
             $all['Après les études']['items'][0],
         ];

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ContactMessage extends Model
 {
     public const SUBJECTS = [
-        'candidature' => 'Je veux étudier en Chine',
+        'candidature' => 'Je veux étudier à l’étranger',
         'dossier' => 'Mon dossier en cours',
         'recrutement' => 'Recruter des talents',
         'partenariat' => 'Partenariat',

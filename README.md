@@ -1,6 +1,6 @@
 # Back to Burkina — application web, PWA et mobile (Capacitor)
 
-Plateforme Travel Express : candidature pour étudier en Chine, suivi du dossier, communauté (chat, super groupe, groupes) et vivier de talents pour le retour à l’emploi.
+Plateforme Travel Express : candidature pour étudier à l’étranger (Chine, France, Canada, Maroc, Turquie…), suivi du dossier, communauté (chat, super groupe, groupes) et vivier de talents pour le retour à l’emploi.
 
 - **Laravel 12** (PHP 8.2 ou plus), Blade, **Tailwind CSS 4**, **Alpine.js**
 - **MySQL / MariaDB**
@@ -39,7 +39,7 @@ Ouvrez http://localhost:8000
 | Administrateur | admin@backtoburkina.bf |
 | Conseiller Travel Express | conseil@backtoburkina.bf |
 | Candidate (dossier en cours) | awa@exemple.bf |
-| Étudiant en Chine | issouf@exemple.bf |
+| Étudiant à l’étranger | issouf@exemple.bf |
 | Diplômés (vivier de talents) | talent1@exemple.bf à talent4@exemple.bf |
 | Recruteur | recruteur@exemple.bf |
 
@@ -71,7 +71,7 @@ En production, configurez un vrai serveur SMTP (`MAIL_*`), sinon personne ne pou
 Règles métier :
 - chaque nouvel inscrit rejoint automatiquement le **super groupe** ;
 - dans le super groupe, **Annonces** et **Bourses** sont réservés à l’équipe (rôles `agent` et `admin`) ;
-- un futur étudiant ou un étudiant en Chine reçoit un **dossier** avec 5 documents à fournir ;
+- un futur étudiant ou un étudiant à l’étranger reçoit un **dossier** avec 5 documents à fournir ;
 - un diplômé reçoit un **profil talent**, visible des recruteurs seulement après vérification (`verified_at`) ;
 - les documents du dossier sont stockés en privé (`storage/app/private`), pas dans `public`.
 

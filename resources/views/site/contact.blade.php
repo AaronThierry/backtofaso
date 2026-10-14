@@ -1,6 +1,6 @@
 @php($contact = config('backtoburkina.contact'))
-<x-layouts.site title="Contact" description="Contactez Travel Express à Bobo-Dioulasso : une question sur les études en Chine, votre dossier, un recrutement ou un partenariat.">
-    <x-site.page-hero eyebrow="Contact" title="Parlons de votre projet." lead="Une question sur les études en Chine, votre dossier, un recrutement ou un partenariat ? Écrivez-nous : un membre de l’équipe vous répond." />
+<x-layouts.site title="Contact" description="Contactez Travel Express à Bobo-Dioulasso : une question sur les études à l’étranger, votre dossier, un recrutement ou un partenariat.">
+    <x-site.page-hero eyebrow="Contact" title="Parlons de votre projet." lead="Une question sur les études à l’étranger, votre dossier, un recrutement ou un partenariat ? Écrivez-nous : un membre de l’équipe vous répond." />
 
     <section class="mx-auto grid max-w-[1200px] gap-8 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.25fr_0.75fr] lg:gap-10">
         {{-- Formulaire --}}

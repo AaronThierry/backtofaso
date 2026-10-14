@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 // ---------- Site public ----------
 Route::get('/', [PageController::class, 'home'])->name('home');
-Route::get('/etudier-en-chine', [PageController::class, 'study'])->name('study');
+Route::get('/etudier-a-l-etranger', [PageController::class, 'study'])->name('study');
+Route::permanentRedirect('/etudier-en-chine', '/etudier-a-l-etranger'); // ancienne adresse
 Route::get('/entreprises', [PageController::class, 'companies'])->name('companies');
 Route::get('/questions-frequentes', [PageController::class, 'faq'])->name('faq');
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');

@@ -102,10 +102,11 @@
                 <section class="card flex flex-col p-2">
                     @foreach ([
                         ['briefcase', 'Domaine', $profile->field],
+                        ['globe', 'Pays des études', $profile->countryName()],
                         ['graduation', 'Formation', collect([$profile->school, $profile->school_city])->filter()->join(', ')],
                         ['calendar', 'Diplômé(e) en', $profile->graduation_year],
                         ['language', 'Langues', implode(' · ', $profile->languages ?? [])],
-                        ['globe', 'Niveau de chinois', $profile->hsk_level],
+                        ['star', 'Certification de langue', $profile->language_cert],
                     ] as [$icon, $label, $value])
                         @if ($value)
                             <div class="flex items-center gap-3 rounded-xl px-3 py-3">

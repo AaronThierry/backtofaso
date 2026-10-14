@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TalentProfile;
 use App\Models\User;
+use App\Support\Destinations;
 use App\Support\Faq;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
@@ -19,7 +20,7 @@ class PageController extends Controller
 
     public function study(): View
     {
-        return view('site.study', ['fields' => User::FIELDS]);
+        return view('site.study', ['fields' => User::FIELDS, 'destinations' => Destinations::all()]);
     }
 
     public function companies(): View

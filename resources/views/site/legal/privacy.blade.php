@@ -11,7 +11,7 @@
         <h2>Données collectées</h2>
         <ul>
             <li><strong>Compte</strong> : nom, prénom, adresse e-mail, téléphone, mot de passe (enregistré chiffré), profil choisi.</li>
-            <li><strong>Profil</strong> : date de naissance, ville, diplôme, domaines d’intérêt, niveau de chinois, photo (facultative), préférences de notification.</li>
+            <li><strong>Profil</strong> : date de naissance, ville, diplôme, domaines d’intérêt, pays visé, niveau de langue, photo (facultative), préférences de notification.</li>
             <li><strong>Dossier de candidature</strong> : documents déposés (passeport, diplômes, relevés de notes, etc.) et suivi des étapes.</li>
             <li><strong>Profil talent</strong> (diplômés) : parcours, compétences, langues, disponibilité, CV.</li>
             <li><strong>Messagerie</strong> : messages et fichiers échangés dans la communauté et les conversations.</li>

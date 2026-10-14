@@ -37,7 +37,7 @@
             <div class="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
                 <div class="flex max-w-xl flex-col gap-4">
                     <span class="eyebrow text-gold-300 lg:hidden">{{ $greeting }}, {{ $user->first_name }}</span>
-                    <h2 class="text-[30px] font-extrabold leading-[1.04] sm:text-[36px] lg:text-[42px]">Étudier en Chine.<br><span class="bg-linear-to-r from-gold-200 to-gold-400 bg-clip-text text-transparent">Revenir bâtir le Faso.</span></h2>
+                    <h2 class="text-[30px] font-extrabold leading-[1.04] sm:text-[36px] lg:text-[42px]">Étudier à l’étranger.<br><span class="bg-linear-to-r from-gold-200 to-gold-400 bg-clip-text text-transparent">Revenir bâtir le Faso.</span></h2>
                     <p class="text-[15px] leading-relaxed text-white/70">Candidature, visa, vie sur place et retour à l’emploi : un seul accompagnement, du départ au retour.</p>
                     <div class="flex flex-wrap gap-2.5 pt-1">
                         @if ($dossier)
@@ -57,7 +57,7 @@
                         <span class="flex min-w-0 flex-col gap-1.5">
                             <span class="text-xs font-bold uppercase tracking-[0.14em] text-white/55">Mon dossier</span>
                             <span class="font-display text-lg font-bold leading-tight">{{ $dossier->stepLabel() }}</span>
-                            <span class="text-[13px] text-white/65">Étape {{ $dossier->current_step }} sur {{ count(\App\Models\Dossier::STEPS) }}</span>
+                            <span class="text-[13px] text-white/65">Étape {{ $dossier->current_step }} sur {{ count(\App\Models\Dossier::STEPS) }}{{ $dossier->countryName() ? ' · '.$dossier->countryName() : '' }}</span>
                             @if ($dossier->missing_count)
                                 <span class="mt-1 inline-flex items-center gap-1.5 self-start rounded-full bg-gold-400 px-2.5 py-1 text-xs font-bold text-navy-950">{{ $dossier->missing_count }} document(s) à fournir</span>
                             @endif
@@ -156,7 +156,7 @@
                     <div class="card flex flex-col p-1.5">
                         @foreach ([
                             [route('chat.show', $super), 'chat', 'Communauté', 'Annonces, entraide, emplois, bourses'],
-                            [route('talents.index'), 'users', 'Vivier de talents', 'Diplômés formés en Chine'],
+                            [route('talents.index'), 'users', 'Vivier de talents', 'Diplômés formés à l’étranger'],
                             [route('account'), 'user', 'Mon compte', 'Profil et notifications'],
                         ] as [$url, $icon, $t, $d])
                             <a href="{{ $url }}" class="group flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-ink-50">

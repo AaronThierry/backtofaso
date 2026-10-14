@@ -15,7 +15,7 @@ Ne communiquez jamais ce code. L’équipe Travel Express ne vous le demandera j
 {!! $ignore !!}
 
 --
-Back to Burkina · Étudier en Chine, revenir bâtir le Faso.
+Back to Burkina · Étudier à l’étranger, revenir bâtir le Faso.
 Un service Travel Express · Bobo-Dioulasso, Burkina Faso
 {{ config('app.url') }}
 

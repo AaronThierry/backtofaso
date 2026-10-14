@@ -1,6 +1,6 @@
 @props(['title' => null, 'bodyClass' => '', 'description' => null])
 @php
-$description ??= 'Étudier en Chine, revenir bâtir le Faso. Travel Express accompagne les étudiants burkinabè de la candidature au retour à l’emploi.';
+$description ??= 'Étudier à l’étranger, revenir bâtir le Faso. Travel Express accompagne les étudiants burkinabè de la candidature au retour à l’emploi, quelle que soit leur destination.';
 $fullTitle = ($title ? $title.' · ' : '').'Back to Burkina';
 @endphp
 <!DOCTYPE html>

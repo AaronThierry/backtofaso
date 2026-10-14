@@ -16,7 +16,7 @@
                 if ($user->needsDossier()) $next[] = [route('dossier'), 'folder', 'Déposer vos documents', 'Passeport, diplômes, relevés de notes'];
                 $next[] = [route('chat.index'), 'chat', 'Dire bonjour à la communauté', 'Vous êtes déjà membre du super groupe'];
                 if ($user->talentProfile) $next[] = [route('talents.edit'), 'briefcase', 'Compléter votre profil talent', 'Compétences, langues, CV'];
-                if ($user->isRecruiter()) $next[] = [route('talents.index'), 'users', 'Parcourir le vivier de talents', 'Profils formés en Chine'];
+                if ($user->isRecruiter()) $next[] = [route('talents.index'), 'users', 'Parcourir le vivier de talents', 'Profils formés à l’étranger'];
             @endphp
             @foreach ($next as $i => [$url, $icon, $title, $sub])
                 <a href="{{ $url }}" class="card card-hover group flex items-center gap-4 p-4">

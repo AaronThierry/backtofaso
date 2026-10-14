@@ -20,7 +20,7 @@
                     <input type="file" name="avatar" accept="image/*" class="sr-only" @change="preview = $event.target.files[0] ? URL.createObjectURL($event.target.files[0]) : null">
                 </label>
                 <label class="flex flex-1 flex-col gap-1.5"><span class="field-label">Nom du groupe</span>
-                    <input name="name" x-model="name" required maxlength="80" placeholder="Étudiants à Wuhan" class="field"></label>
+                    <input name="name" x-model="name" required maxlength="80" placeholder="Étudiants à Montréal" class="field"></label>
             </div>
 
             <fieldset class="flex flex-col gap-2.5">

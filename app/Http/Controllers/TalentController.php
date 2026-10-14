@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TalentProfile;
 use App\Models\User;
+use App\Support\Destinations;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -14,11 +15,14 @@ class TalentController extends Controller
     public function index(Request $request): View
     {
         $field = $request->query('domaine');
+        $country = $request->query('pays');
+        $country = is_string($country) && array_key_exists($country, Destinations::options()) ? $country : null;
         $q = trim((string) $request->query('q'));
 
         $profiles = TalentProfile::visible()
             ->with('user')
             ->when($field && in_array($field, User::FIELDS, true), fn ($query) => $query->where('field', $field))
+            ->when($country, fn ($query) => $query->where('study_country', $country))
             ->when($q !== '', function ($query) use ($q) {
                 $query->where(function ($w) use ($q) {
                     $w->where('headline', 'like', "%{$q}%")
@@ -36,6 +40,8 @@ class TalentController extends Controller
             'profiles' => $profiles,
             'fields' => User::FIELDS,
             'field' => $field,
+            'countries' => Destinations::options(),
+            'country' => $country,
             'q' => $q,
         ]);
     }
@@ -57,7 +63,7 @@ class TalentController extends Controller
             return redirect()->route('dashboard')->with('status', 'Le profil talent est réservé aux diplômés de retour.');
         }
 
-        return view('app.talents.edit', ['profile' => $profile, 'fields' => User::FIELDS]);
+        return view('app.talents.edit', ['profile' => $profile, 'fields' => User::FIELDS, 'countries' => Destinations::options()]);
     }
 
     public function update(Request $request): RedirectResponse
@@ -73,7 +79,8 @@ class TalentController extends Controller
             'graduation_year' => ['nullable', 'integer', 'between:1980,2100'],
             'skills' => ['nullable', 'string', 'max:500'],
             'languages' => ['nullable', 'string', 'max:200'],
-            'hsk_level' => ['nullable', 'string', 'max:10'],
+            'study_country' => ['nullable', Rule::in(array_keys(Destinations::options()))],
+            'language_cert' => ['nullable', 'string', 'max:60'],
             'availability' => ['required', Rule::in(array_keys(TalentProfile::AVAILABILITY))],
             'available_from' => ['nullable', 'string', 'max:40'],
             'location' => ['nullable', 'string', 'max:60'],

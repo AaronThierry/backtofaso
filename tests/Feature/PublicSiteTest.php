@@ -22,9 +22,9 @@ class PublicSiteTest extends TestCase
     {
         foreach ([
             '/' => 'Revenir bâtir le Faso',
-            '/etudier-en-chine' => 'Les pièces à préparer',
-            '/entreprises' => 'Recrutez des talents formés en Chine',
-            '/questions-frequentes' => 'Qu’est-ce que le formulaire JW202',
+            '/etudier-a-l-etranger' => 'Le monde comme campus',
+            '/entreprises' => 'Recrutez des talents formés à l’étranger',
+            '/questions-frequentes' => 'Dans quels pays pouvez-vous m’accompagner',
             '/contact' => 'Écrivez-nous',
             '/mentions-legales' => 'Éditeur du site',
             '/confidentialite' => 'Vos droits',
@@ -32,6 +32,11 @@ class PublicSiteTest extends TestCase
         ] as $url => $text) {
             $this->get($url)->assertOk()->assertSee($text, false);
         }
+    }
+
+    public function test_old_china_page_redirects_to_study_abroad(): void
+    {
+        $this->get('/etudier-en-chine')->assertRedirect('/etudier-a-l-etranger')->assertStatus(301);
     }
 
     public function test_sitemap_lists_public_pages(): void

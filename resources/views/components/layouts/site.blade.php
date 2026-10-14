@@ -1,7 +1,7 @@
 @props(['title' => null, 'description' => null])
 @php
 $links = [
-    route('study') => ['Étudier en Chine', 'study'],
+    route('study') => ['Étudier à l’étranger', 'study'],
     route('home').'#communaute' => ['Communauté', null],
     route('companies') => ['Entreprises', 'companies'],
     route('faq') => ['FAQ', 'faq'],
@@ -126,11 +126,12 @@ $contact = config('backtoburkina.contact');
         <div class="relative mx-auto grid max-w-[1200px] gap-10 px-4 py-14 text-sm sm:grid-cols-2 sm:px-6 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
             <div class="flex flex-col gap-4">
                 <a href="{{ route('home') }}" class="flex items-center gap-3"><x-logo :size="44" /><span class="font-display text-xl font-bold">Back to Burkina</span></a>
-                <span class="max-w-xs leading-relaxed text-white/65">Un projet de Travel Express pour le retour des compétences au Burkina Faso. Étudier en Chine, revenir bâtir le Faso.</span>
+                <span class="max-w-xs leading-relaxed text-white/65">Un projet de Travel Express pour le retour des compétences au Burkina Faso. Étudier à l’étranger, revenir bâtir le Faso.</span>
             </div>
             <nav class="flex flex-col gap-3" aria-label="Étudiants">
                 <span class="text-xs font-bold uppercase tracking-[0.14em] text-gold-300">Étudiants</span>
-                <a href="{{ route('study') }}" class="text-white/75 transition hover:text-white">Étudier en Chine</a>
+                <a href="{{ route('study') }}" class="text-white/75 transition hover:text-white">Étudier à l’étranger</a>
+                <a href="{{ route('study') }}#destinations" class="text-white/75 transition hover:text-white">Destinations</a>
                 <a href="{{ route('study') }}#bourses" class="text-white/75 transition hover:text-white">Bourses d’études</a>
                 <a href="{{ route('study') }}#documents" class="text-white/75 transition hover:text-white">Documents à préparer</a>
                 <a href="{{ route('welcome') }}" class="text-white/75 transition hover:text-white">Déposer un dossier</a>

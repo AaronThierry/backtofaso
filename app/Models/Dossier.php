@@ -12,8 +12,8 @@ class Dossier extends Model
         1 => ['Inscription', 'Compte créé, profil complété'],
         2 => ['Documents', 'Pièces du dossier'],
         3 => ['Admission', 'Dossier transmis à l’université'],
-        4 => ['Formulaire JW202', 'Délivré après admission'],
-        5 => ['Visa étudiant (X1)', 'Rendez-vous à l’ambassade'],
+        4 => ['Documents d’admission', 'Lettre d’admission et pièces pour le visa'],
+        5 => ['Visa étudiant', 'Rendez-vous à l’ambassade ou au consulat'],
         6 => ['Départ', 'Billet et accueil à l’arrivée'],
     ];
 
@@ -26,7 +26,7 @@ class Dossier extends Model
         'photo' => 'Photo d’identité',
     ];
 
-    protected $fillable = ['user_id', 'advisor_id', 'program', 'university', 'city', 'intake_year', 'current_step', 'status'];
+    protected $fillable = ['user_id', 'advisor_id', 'program', 'university', 'country', 'city', 'intake_year', 'current_step', 'status'];
 
     public function user(): BelongsTo
     {
@@ -47,6 +47,7 @@ class Dossier extends Model
     {
         $dossier = static::create([
             'user_id' => $user->id,
+            'country' => $user->destination,
             'current_step' => 2,
             'intake_year' => now()->month >= 9 ? now()->year + 1 : now()->year,
         ]);
@@ -56,6 +57,12 @@ class Dossier extends Model
         }
 
         return $dossier;
+    }
+
+    /** Nom du pays de destination (« Chine », « Canada »…) */
+    public function countryName(): ?string
+    {
+        return AppSupportDestinations::name($this->country);
     }
 
     public function stepLabel(): string

@@ -52,13 +52,30 @@
             </div>
         </fieldset>
 
+        <fieldset class="flex flex-col gap-2.5" x-data="{ destination: @js(old('destination', $user->destination)) }">
+            <legend class="mb-2.5 flex w-full items-baseline justify-between">
+                <span class="field-label">{{ match ($user->role) { \App\Models\User::ROLE_STUDENT_ABROAD => 'Pays où vous étudiez', \App\Models\User::ROLE_GRADUATE => 'Pays où vous avez étudié', default => 'Où souhaitez-vous étudier ?' } }}</span>
+                <span class="text-xs font-semibold text-ink-500">Vous pourrez en changer</span>
+            </legend>
+            <div class="flex flex-wrap gap-2">
+                @foreach ($destinations as $key => $name)
+                    <label class="chip" :class="destination === '{{ $key }}' && 'chip-on'">
+                        <input type="radio" name="destination" value="{{ $key }}" x-model="destination" class="sr-only">{{ $name }}
+                    </label>
+                @endforeach
+            </div>
+            <x-field-error name="destination" />
+        </fieldset>
+
         <label class="flex flex-col gap-1.5">
-            <span class="field-label">Niveau de chinois</span>
-            <select name="chinese_level" class="field">
+            <span class="field-label">Niveau dans la langue d’enseignement visée</span>
+            <select name="language_level" class="field">
+                <option value="">Je ne sais pas encore</option>
                 @foreach ($levels as $key => $label)
-                    <option value="{{ $key }}" @selected(old('chinese_level', $user->chinese_level) === $key)>{{ $label }}</option>
+                    <option value="{{ $key }}" @selected(old('language_level', $user->language_level) === $key)>{{ $label }}</option>
                 @endforeach
             </select>
+            <span class="text-[12.5px] text-ink-500">Français, anglais, chinois… selon le pays et le programme choisis.</span>
         </label>
 
         <div class="mt-auto flex gap-2.5 pt-2">

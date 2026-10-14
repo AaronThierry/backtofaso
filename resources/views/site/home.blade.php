@@ -12,7 +12,7 @@
                     Votre dossier suivi en ligne
                 </span>
                 <h1 data-lines class="text-[clamp(2.4rem,8.5vw,5rem)] font-extrabold leading-[0.98] lg:text-[clamp(3.2rem,5.6vw,5rem)]">
-                    <span class="block">Étudier en Chine.</span>
+                    <span class="block">Étudier à l’étranger.</span>
                     <span class="block bg-linear-to-r from-gold-200 via-gold-300 to-gold-400 bg-clip-text pb-1 text-transparent">Revenir bâtir le Faso.</span>
                 </h1>
                 <p data-reveal style="--reveal-delay: 250ms" class="max-w-xl text-[16.5px] leading-relaxed text-white/70 sm:text-lg">Candidature, visa, vie sur place et retour à l’emploi : Travel Express accompagne les étudiants burkinabè du départ jusqu’au retour, et met leurs compétences au service du pays.</p>
@@ -78,7 +78,7 @@
         <div class="fade-edges flex overflow-hidden">
             <div class="flex w-max animate-marquee items-center gap-10 pr-10 hover:[animation-play-state:paused]">
                 @foreach (range(1, 2) as $_)
-                    @foreach (['Admission', 'Bourses d’études', 'Formulaire JW202', 'Visa X1', 'Accueil à l’arrivée', 'Cours de chinois · HSK', 'Entraide', 'Retour à l’emploi', 'Vivier de talents'] as $word)
+                    @foreach (['Chine', 'France', 'Canada', 'Maroc', 'Turquie', 'Allemagne', 'Bourses d’études', 'Visa étudiant', 'Accueil à l’arrivée', 'Entraide', 'Retour à l’emploi', 'Vivier de talents'] as $word)
                         <span class="flex shrink-0 items-center gap-10 font-display text-[19px] font-bold text-navy-950/70 sm:text-[22px]">{{ $word }} <x-icon name="star" :size="16" class="text-gold-400" /></span>
                     @endforeach
                 @endforeach
@@ -119,14 +119,14 @@
             </div>
             <div data-reveal style="--reveal-delay: 120ms" class="flex max-w-md flex-col gap-3">
                 <p class="text-[16px] leading-relaxed text-ink-600">Trois temps, une seule équipe. Chaque étape de votre dossier est visible dans votre espace, sur le web comme sur l’application.</p>
-                <a href="{{ route('study') }}" class="inline-flex items-center gap-1.5 self-start text-[15px] font-bold text-brand-600 transition-all hover:gap-2.5">Le guide complet pour étudier en Chine <x-icon name="arrow" :size="17" /></a>
+                <a href="{{ route('study') }}" class="inline-flex items-center gap-1.5 self-start text-[15px] font-bold text-brand-600 transition-all hover:gap-2.5">Le guide complet pour étudier à l’étranger <x-icon name="arrow" :size="17" /></a>
             </div>
         </div>
 
         <div class="snap-row md:mx-6 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:p-0" data-reveal-stagger="120">
             @foreach ([
-                ['plane', 'Partir', 'Nous vous aidons à choisir la bonne université et à constituer un dossier solide.', ['Choix du programme et des bourses', 'Dossier d’admission et JW202', 'Visa étudiant et billet']],
-                ['graduation', 'Étudier', 'Sur place, vous gardez le lien avec l’agence et avec les autres étudiants burkinabè.', ['Accueil à l’arrivée', 'Groupes par ville et par promo', 'Fiches pratiques : HSK, banque, santé']],
+                ['plane', 'Partir', 'Nous vous aidons à choisir le bon pays, la bonne université et à constituer un dossier solide.', ['Choix de la destination et des bourses', 'Dossier d’admission', 'Visa étudiant et billet']],
+                ['graduation', 'Étudier', 'Sur place, vous gardez le lien avec l’agence et avec les autres étudiants burkinabè.', ['Accueil à l’arrivée', 'Groupes par pays, par ville et par promo', 'Fiches pratiques : langue, banque, santé']],
                 ['briefcase', 'Revenir', 'Votre diplôme en poche, votre profil est mis en avant auprès des recruteurs.', ['Profil dans le vivier de talents', 'Offres d’emploi ciblées', 'Appui aux projets de retour']],
             ] as [$icon, $t, $d, $items])
                 <article data-reveal class="card card-hover group relative flex w-[82%] max-w-[340px] flex-col gap-5 overflow-hidden p-6 sm:p-7 md:w-auto md:max-w-none">
@@ -240,7 +240,7 @@
                     </div>
                     <div data-reveal class="flex max-w-[88%] items-end gap-2 self-start">
                         <x-avatar initials="IS" :size="30" />
-                        <div class="rounded-[20px] rounded-bl-md bg-white px-3.5 py-2.5 shadow-card"><span class="text-[12.5px] font-bold text-brand-700">Issouf · étudiant en Chine</span><p class="text-sm">Je peux partager mon dossier de candidature comme exemple si ça aide.</p></div>
+                        <div class="rounded-[20px] rounded-bl-md bg-white px-3.5 py-2.5 shadow-card"><span class="text-[12.5px] font-bold text-brand-700">Issouf · étudiant au Canada</span><p class="text-sm">Je peux partager mon dossier de candidature comme exemple si ça aide.</p></div>
                     </div>
                     <div data-reveal="right" class="max-w-[78%] self-end rounded-[20px] rounded-br-md bg-linear-to-br from-brand-500 to-brand-600 px-3.5 py-2.5 text-sm text-white shadow-[0_6px_16px_-8px_rgb(0_113_227/0.6)]">Avec plaisir, merci Issouf !</div>
                     <div data-reveal class="flex items-center gap-1.5 self-start rounded-full bg-white px-3 py-2 shadow-card" aria-hidden="true">
@@ -259,7 +259,7 @@
             <div class="flex flex-wrap items-end justify-between gap-6 px-4 sm:px-6">
                 <div data-reveal class="flex max-w-2xl flex-col gap-4">
                     <span class="eyebrow">Le vivier de talents</span>
-                    <h2 class="text-[clamp(2rem,5.5vw,3.2rem)] font-extrabold leading-[1.05] text-navy-950">Formés en Chine,<br>prêts pour le Burkina.</h2>
+                    <h2 class="text-[clamp(2rem,5.5vw,3.2rem)] font-extrabold leading-[1.05] text-navy-950">Formés à l’étranger,<br>prêts pour le Burkina.</h2>
                 </div>
                 <a data-reveal style="--reveal-delay: 120ms" href="{{ route('register', ['profil' => 'recruiter']) }}" class="btn-secondary">Accéder au vivier <x-icon name="arrow" :size="18" /></a>
             </div>
@@ -273,7 +273,7 @@
                             </div>
                             <span class="font-display text-[18px] font-bold text-navy-950">{{ $t->user->first_name }} {{ mb_substr($t->user->last_name, 0, 1) }}.</span>
                             <span class="text-sm leading-snug text-ink-600">{{ $t->headline }}</span>
-                            @if ($t->hsk_level)<span class="mt-auto self-start rounded-lg bg-gold-50 px-2.5 py-1 text-xs font-bold text-gold-700 ring-1 ring-gold-200">Chinois {{ $t->hsk_level }}</span>@endif
+                            @if ($t->countryName())<span class="mt-auto inline-flex items-center gap-1.5 self-start rounded-lg bg-gold-50 px-2.5 py-1 text-xs font-bold text-gold-700 ring-1 ring-gold-200"><x-icon name="globe" :size="13" /> Formé(e) en {{ $t->countryName() }}</span>@endif
                         </div>
                     @endforeach
                 </div>
@@ -289,15 +289,15 @@
             <div class="bg-weave pointer-events-none absolute inset-y-0 right-0 w-1/2 opacity-50 [mask-image:linear-gradient(to_left,black,transparent)]"></div>
             <div class="pointer-events-none absolute -bottom-24 -right-16 size-72 animate-drift rounded-full bg-brand-500/25 blur-3xl"></div>
             <span class="eyebrow relative text-gold-300">Entreprises</span>
-            <h2 class="relative text-[clamp(1.9rem,5vw,2.8rem)] font-extrabold leading-[1.05]">Recrutez des profils formés en Chine.</h2>
-            <p class="relative max-w-xl text-base leading-relaxed text-white/70">Ingénieurs, techniciens, médecins, commerciaux : des diplômés vérifiés par Travel Express, qui parlent français et chinois. Idéal pour les entreprises burkinabè et les sociétés chinoises installées au pays.</p>
+            <h2 class="relative text-[clamp(1.9rem,5vw,2.8rem)] font-extrabold leading-[1.05]">Recrutez des profils formés à l’étranger.</h2>
+            <p class="relative max-w-xl text-base leading-relaxed text-white/70">Ingénieurs, techniciens, médecins, commerciaux : des diplômés vérifiés par Travel Express, formés en Chine, en France, au Canada et ailleurs, et souvent multilingues. Idéal pour les entreprises burkinabè comme pour les sociétés étrangères installées au pays.</p>
             <div class="relative mt-2 flex flex-col gap-3 min-[460px]:flex-row min-[460px]:flex-wrap">
                 <a href="{{ route('register', ['profil' => 'recruiter']) }}" class="btn-gold shine">Créer un compte recruteur <x-icon name="arrow" :size="18" /></a>
                 <a href="{{ route('companies') }}" class="btn-outline-light">En savoir plus</a>
             </div>
         </div>
         <div class="flex flex-col gap-5" data-reveal-stagger="110">
-            @foreach ([['search', 'Recherche ciblée', 'Filtrez par domaine, niveau de chinois, ville et disponibilité.'], ['chat', 'Offres dans la communauté', 'Publiez vos offres dans le thème Emplois du super groupe.'], ['shield', 'Profils vérifiés', 'Chaque diplôme est contrôlé par Travel Express avant publication.']] as [$icon, $t, $d])
+            @foreach ([['search', 'Recherche ciblée', 'Filtrez par domaine, pays de formation, ville et disponibilité.'], ['chat', 'Offres dans la communauté', 'Publiez vos offres dans le thème Emplois du super groupe.'], ['shield', 'Profils vérifiés', 'Chaque diplôme est contrôlé par Travel Express avant publication.']] as [$icon, $t, $d])
                 <div data-reveal="right" class="card card-hover flex flex-1 items-start gap-4 p-6">
                     <span class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-600"><x-icon :name="$icon" :size="22" /></span>
                     <span class="flex flex-col gap-1"><span class="font-display text-lg font-bold text-navy-950">{{ $t }}</span><span class="text-[15px] leading-relaxed text-ink-600">{{ $d }}</span></span>

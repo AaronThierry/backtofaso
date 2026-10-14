@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\TalentProfile;
 use App\Models\User;
+use App\Support\Destinations;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -19,7 +20,8 @@ class OnboardingController extends Controller
             'user' => $request->user(),
             'degrees' => User::DEGREES,
             'fields' => User::FIELDS,
-            'levels' => User::CHINESE_LEVELS,
+            'levels' => User::LANGUAGE_LEVELS,
+            'destinations' => Destinations::options(),
             'cities' => config('backtoburkina.cities'),
         ]);
     }
@@ -36,10 +38,17 @@ class OnboardingController extends Controller
             'last_degree' => ['nullable', Rule::in(User::DEGREES)],
             'interests' => ['nullable', 'array'],
             'interests.*' => [Rule::in(User::FIELDS)],
-            'chinese_level' => ['nullable', Rule::in(array_keys(User::CHINESE_LEVELS))],
+            'destination' => ['nullable', Rule::in(array_keys(Destinations::options()))],
+            'language_level' => ['nullable', Rule::in(array_keys(User::LANGUAGE_LEVELS))],
         ], ['birth_date.before' => 'Date de naissance invalide.']);
 
-        $request->user()->update($data);
+        $user = $request->user();
+        $user->update($data);
+
+        // Le dossier ouvert à l'inscription prend le pays choisi, tant que le conseiller n'en a pas fixé un
+        if (! empty($data['destination']) && $user->dossier && ! $user->dossier->country) {
+            $user->dossier->update(['country' => $data['destination']]);
+        }
 
         return redirect()->route('onboarding.preferences');
     }
@@ -74,7 +83,8 @@ class OnboardingController extends Controller
         if ($user->role === User::ROLE_GRADUATE && ! $user->talentProfile) {
             TalentProfile::create([
                 'user_id' => $user->id,
-                'headline' => 'Diplômé(e) de Chine',
+                'headline' => 'Diplômé(e) de retour au Burkina',
+                'study_country' => $user->destination,
                 'field' => $user->interests[0] ?? 'Autre',
                 'languages' => ['Français'],
                 'location' => $user->city,

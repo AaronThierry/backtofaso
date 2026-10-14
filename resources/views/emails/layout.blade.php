@@ -35,21 +35,17 @@
                     {{-- En-tête bleu nuit --}}
                     <tr>
                         <td bgcolor="#0A1C42" style="background-color:#0A1C42;background-image:linear-gradient(135deg,#163571 0%,#0A1C42 55%,#06122C 100%);border-radius:20px 20px 0 0;padding:28px 36px 26px;" class="bb-pad">
-                            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-                                <tr>
-                                    <td width="44" height="44" align="center" valign="middle" bgcolor="#C8922B"
-                                        style="width:44px;height:44px;background-color:#C8922B;background-image:linear-gradient(135deg,#E0AE4C,#C8922B 55%,#8E6202);border-radius:13px;color:#FFFFFF;font-family:'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;letter-spacing:-0.5px;">BB</td>
-                                    <td style="padding-left:14px;font-family:'Segoe UI',Helvetica,Arial,sans-serif;">
-                                        <div style="font-size:18px;font-weight:700;color:#FFFFFF;line-height:1.2;">Back to Burkina</div>
-                                        <div style="font-size:12.5px;color:#AEB8CC;line-height:1.4;">par Travel Express</div>
-                                    </td>
-                                </tr>
-                            </table>
+                            {{-- Logo Back to Faso, version pour fond sombre (PNG : les messageries n'affichent pas le SVG) --}}
+                            <a href="{{ config('app.url') }}" style="text-decoration:none;">
+                                <img src="{{ asset('images/brand/email-logo.png') }}" width="200" height="41" alt="Back to Faso"
+                                     style="display:block;width:200px;height:41px;border:0;outline:none;color:#FFFFFF;font-family:'Segoe UI',Helvetica,Arial,sans-serif;font-size:20px;font-weight:800;">
+                            </a>
+                            <div style="padding-top:8px;font-family:'Segoe UI',Helvetica,Arial,sans-serif;font-size:12.5px;color:#AEB8CC;line-height:1.4;">par Travel Express</div>
                         </td>
                     </tr>
-                    {{-- Liseré doré --}}
+                    {{-- Liseré aux couleurs du drapeau --}}
                     <tr>
-                        <td height="4" bgcolor="#C8922B" style="height:4px;line-height:4px;font-size:4px;background-color:#C8922B;background-image:linear-gradient(90deg,#F3D49E,#E0AE4C,#C8922B);">&nbsp;</td>
+                        <td height="4" bgcolor="#009E49" style="height:4px;line-height:4px;font-size:4px;background-color:#009E49;background-image:linear-gradient(90deg,#EF2B2D 0%,#EF2B2D 45%,#FCD116 45%,#FCD116 55%,#009E49 55%,#009E49 100%);">&nbsp;</td>
                     </tr>
 
                     {{-- Contenu --}}
